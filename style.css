@@ -37,7 +37,7 @@ and licensed under the GPL compatible Apache 2.0 license (http://www.apache.org/
 }
 @font-face {
 	font-family: 'Droid Serif';
-	src: url('fonts/DroidSerif-Regular-webfont.eot');
+	src: url(fonts/DroidSerif-Regular-webfont.eot);
 	src: url('fonts/DroidSerif-Regular-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/DroidSerif-Regular-webfont.woff') format('woff'), url('fonts/DroidSerif-Regular-webfont.ttf') format('truetype'), url('fonts/DroidSerif-Regular-webfont.svg#DroidSerifRegular') format('svg');
 	font-weight: normal;
 	font-style: normal;
