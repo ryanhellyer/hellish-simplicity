@@ -13,7 +13,7 @@
 function hellish_comments_navigation( $id = '' ) {
 	if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) {
 		?>
-	<nav role="navigation" id="<?php echo $id; ?>" class="site-navigation comment-navigation">
+	<nav role="navigation" id="<?php echo esc_attr( $id ); ?>" class="site-navigation comment-navigation">
 		<h1 class="assistive-text"><?php _e( 'Comment navigation', 'hellish' ); ?></h1>
 		<div class="nav-previous"><?php previous_comments_link( __( '&larr; Older Comments', 'hellish' ) ); ?></div>
 		<div class="nav-next"><?php next_comments_link( __( 'Newer Comments &rarr;', 'hellish' ) ); ?></div>
