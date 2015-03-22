@@ -1,20 +1,15 @@
 <?php
-function remove_gravityforms_style() {
-	wp_dequeue_style('gforms_css');
-}
-add_action('template_redirect', 'remove_gravityforms_style');
+
 /**
- * Primary class used to load the theme.
+ * Primary class used to load the Hellish Simplicity theme.
  *
- * Some of the code used here was adapted from the Underscores theme from Automattic.
- * 
  * @copyright Copyright (c), Ryan Hellyer
  * @license http://www.gnu.org/licenses/gpl.html GPL
  * @author Ryan Hellyer <ryanhellyer@gmail.com>
  * @package Hellish Simplicity
  * @since Hellish Simplicity 1.5
  */
-class Hellish_Setup {
+class Hellish_Simplicity_Setup {
 
 	/**
 	 * The default header text.
@@ -49,13 +44,18 @@ class Hellish_Setup {
 		add_action( 'customize_register',                   array( $this, 'customize_register' ) );
 		add_action( 'customize_render_control_header-text', array( $this, 'customizer_help' ) );
 		add_filter( 'wp_title',                             array( $this, 'title_tag' ), 10, 2 );
+		add_filter( 'post_class',                           array( $this, 'add_last_post_class' ) );
+
 	}
 
 	/**
-	 * Add option.
+	 * Add the header text option.
 	 */
 	public function add_option() {
-		add_option( $this->header_text_option, $this->default_header_text );
+		add_option(
+			$this->header_text_option, // The header text option
+			$this->default_header_text // The default header text
+		);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class Hellish_Setup {
 	 */
 	public function stylesheet() {
 		if ( ! is_admin() ) {
-			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style-compiled.css', array(), '1.6.4' );
+			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style.min.css', array(), '1.6.4' );
 		}
 	}
 
@@ -180,5 +180,22 @@ class Hellish_Setup {
 		return $title;
 	}
 
+	/**
+	 * Adds a class of .last-post to the last post in a loop.
+	 * This method is discussed here https://geek.hellyer.kiwi/tools/add-class-to-last-post-in-loop/
+	 * 
+	 * @param   array  $classes  The array of post classes
+	 * @return  array  The array of post classes, with .last-post added
+	 */
+	public function add_last_post_class( $classes ) {
+		global $wp_query;
+
+		if ($wp_query->current_post == ( $wp_query->post_count - 1 ) ) {
+			$classes[] = 'last-post';
+		}
+
+		return $classes;
+	}
+
 }
-new Hellish_Setup;
+new Hellish_Simplicity_Setup;

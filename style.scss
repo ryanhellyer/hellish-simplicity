@@ -378,6 +378,10 @@ article {
 	border-bottom: $border;
 }
 
+article.last-post {
+	border-bottom: none;
+}
+
 .entry-content {
 	width: 100%;
 	overflow: auto;

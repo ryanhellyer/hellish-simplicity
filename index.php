@@ -29,7 +29,17 @@ if ( have_posts() ) {
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 			<header class="entry-header">
-				<h1 class="entry-title"><a href="<?php the_permalink(); ?>" title="<?php esc_attr_e( sprintf( __( 'Permalink to %s', 'hellish-simplicity' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a></h1>
+				<h1 class="entry-title"><?php
+
+					// Don't display links on singular post titles
+					if ( is_singular() ) {
+						the_title();
+					} else {
+						?>
+						<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'hellish-simplicity' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a><?php
+					}
+
+					?></h1>
 			</header><!-- .entry-header -->
 
 			<div class="entry-content"><?php
@@ -66,13 +76,14 @@ if ( have_posts() ) {
 					get_the_author()
 				);
 
-				// Category listings
+				// Category listings (only display when we have more than one category)
 				$categories_list = get_the_category_list( __( ', ', 'hellish-simplicity' ) );
-				if ( $categories_list ) {
-				?>
-				<span class="cat-links">
-					<?php printf( __( ' in %1$s', 'hellish-simplicity' ), $categories_list ); ?>
-				</span><?php
+				$all_categories = get_categories();
+				if ( 1 < count( $all_categories ) && $categories_list ) {
+					?>
+					<span class="cat-links">
+						<?php printf( __( ' in %1$s', 'hellish-simplicity' ), $categories_list ); ?>
+					</span><?php
 				}
 
 				// Tag listings

@@ -26,7 +26,7 @@
 <header id="site-header" role="banner">
 	<div class="hgroup">
 		<h1>
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php esc_attr_e( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
 				<?php
 					// Output header text (need fallback to keep WordPress.org them demo happy)
 					$header_text = get_option( 'header-text' );
