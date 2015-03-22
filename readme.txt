@@ -10,6 +10,10 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == Changelog ==
 
+== Version 1.7.8 ==
+March 22nd 2015
+* Fixed pagination code which displayed empty UL tags when not in use
+
 == Version 1.7.7 ==
 March 21st 2015
 * Removed redundant spacer lines from end of last post in loops
@@ -29,21 +33,21 @@ January 21st 2015
 * Removed admin header page. Customiser should be used instead
 
 == Version 1.7.3 ==
-December 18th 2015
+December 18th 2014
 * Changed theme slug from hellish to hellish-simplicity
 * Removed pointless comment HTML code assistance
 * Removed redundant and blank code
 
 == Version 1.7.2 ==
-November 7th 2015
+November 7th 2014
 * Adding additional escaping
 
 == Version 1.7.1 ==
-October 4th 2015
+October 4th 2014
 * Changed theme slug from hellish to hellish-simplicity
 
 == Version 1.7 ==
-September 3rd 2015
+September 3rd 2014
 * Added extra escaping
 
 == Version 1.6.4 ==

@@ -8,10 +8,7 @@
  * @package Hellish Simplicity
  * @since Hellish Simplicity 1.1
  */
-?>
 
-<ul id="numeric-pagination">
-<?php
 
 if ( ! is_singular() ) { // do nothing
 
@@ -21,6 +18,10 @@ if ( ! is_singular() ) { // do nothing
 	if ( $wp_query->max_num_pages <= 1 ) {
 		return;
 	}
+
+	echo '
+
+		<ul id="numeric-pagination">';
 
 	$paged = get_query_var( 'paged' ) ? absint( get_query_var( 'paged') ) : 1;
 	$max = intval( $wp_query->max_num_pages );
@@ -68,7 +69,7 @@ if ( ! is_singular() ) { // do nothing
 	foreach( (array)$links as $link ) {
 		$current = ( $paged == $link ) ? 'class="active"' : '';
 		printf(
-			'<li %s><a href="%s">%s</a></li>' . "\n",
+			"\n" . '			<li %s><a href="%s">%s</a></li>',
 			$current,
 			get_pagenum_link( $link ),
 			$link
@@ -80,10 +81,13 @@ if ( ! is_singular() ) { // do nothing
 		if ( !in_array( $max - 1, $links ) ) {
 			echo '<li>&hellip;</li>' . "\n";
 		}
-		
+
 		$current = ( $paged == $max ) ? 'class="active"' : '';
+		if ( '' != $current ) {
+			$current = ' ' . $current; // Remove redundant space
+		}
 		printf(
-			'<li %s><a href="%s">%s</a></li>' . "\n",
+			"\n" . '			<li%s><a href="%s">%s</a></li>',
 			$current,
 			get_pagenum_link( $max ),
 			$max
@@ -93,13 +97,12 @@ if ( ! is_singular() ) { // do nothing
 	// Next Post Link
 	if ( get_next_posts_link() ) {
 		printf(
-			'<li>%s</li>' . "\n",
+			"\n" . '			<li>%s</li>',
 			get_next_posts_link( __( 'Next &raquo;', 'hellish-simplicity' ) )
 		);
 	}
 
+	echo '
+		</ul>';
 }
 
-?>
-
-</ul>
