@@ -17,7 +17,7 @@ March 22nd 2015
 == Version 1.7.7 ==
 March 21st 2015
 * Removed redundant spacer lines from end of last post in loops
-* Added German language translation
+* Added German language translation. Thanks to @mrsealand for providing the translation (https://twitter.com/mrsealand)
 
 == Version 1.7.6 ==
 February 17th 2015
