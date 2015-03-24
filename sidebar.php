@@ -10,7 +10,7 @@
 
 	if ( ! dynamic_sidebar( 'sidebar' ) ) { ?>
 	<aside>
-		<h1 class="widget-title"><?php _e( 'Recent Posts', 'hellish-simplicity' ); ?></h1>
+		<h2 class="widget-title"><?php _e( 'Recent Posts', 'hellish-simplicity' ); ?></h2>
 		<ul><?php
 			$recent_posts = wp_get_recent_posts();
 			foreach( $recent_posts as $recent ){
@@ -19,13 +19,13 @@
 		?></ul>
 	</aside>
 	<aside>
-		<h1 class="widget-title"><?php _e( 'Archives', 'hellish-simplicity' ); ?></h1>
+		<h2 class="widget-title"><?php _e( 'Archives', 'hellish-simplicity' ); ?></h2>
 		<ul>
 			<?php wp_get_archives( array( 'type' => 'monthly' ) ); ?>
 		</ul>
 	<aside>
 	<aside>
-		<h1 class="widget-title"><?php _e( 'Search', 'hellish-simplicity' ); ?></h1>
+		<h2 class="widget-title"><?php _e( 'Search', 'hellish-simplicity' ); ?></h2>
 		<?php get_search_form(); ?>
 	</aside><?php
 	}

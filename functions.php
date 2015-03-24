@@ -110,8 +110,8 @@ class Hellish_Simplicity_Setup {
 				'id'            => 'sidebar',
 				'before_widget' => '<aside id="%1$s" class="%2$s">',
 				'after_widget'  => '</aside>',
-				'before_title'  => '<h1 class="widget-title">',
-				'after_title'   => '</h1>',
+				'before_title'  => '<h2 class="widget-title">',
+				'after_title'   => '</h2>',
 			)
 		);
 	}
