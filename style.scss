@@ -179,11 +179,6 @@ h6 {
 
 }
 
-h1.widget-title {
-	font-size: 1.4em;
-	font-weight: bold;
-}
-
 h1 {
 	font-size: 2.4em;
 	margin: 1em 0 0.3em;
@@ -192,6 +187,11 @@ h1 {
 h2 {
 	font-size: 1.7em;
 	margin: 1em 0 0.3em;
+}
+
+.widget-title {
+	font-size: 1.4em;
+	font-weight: bold;
 }
 
 h3 {
