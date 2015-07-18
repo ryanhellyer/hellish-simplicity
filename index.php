@@ -125,8 +125,14 @@ else {
 }
 ?>
 
-	</div><!-- #site-content -->
-	<?php get_sidebar(); ?>
+	</div><!-- #site-content --><?php
+
+	// Show sidebar if not on full width template
+	if ( 'full-width.php' != basename( get_page_template() ) ) {
+		get_sidebar();
+	}
+
+	?>
 </div><!-- #content-area -->
 
 <?php get_footer(); ?>
