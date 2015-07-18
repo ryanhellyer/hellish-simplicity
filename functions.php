@@ -135,7 +135,7 @@ class Hellish_Simplicity_Setup {
 		) );
 		$wp_customize->add_control( $this->header_text_option, array(
 			'section'           => 'header_text',
-			'label'             => __( 'Header text', 'hellish-simplicity' ),
+			'label'             => __( 'Header Text', 'hellish-simplicity' ),
 			'type'              => 'text',
 		) );
 
