@@ -12,6 +12,13 @@
 class Hellish_Simplicity_Setup {
 
 	/**
+	 * Theme version number.
+	 * 
+	 * @var string
+	 */
+	public $version_number = '1.8';
+
+	/**
 	 * The default header text.
 	 * 
 	 * @var string
@@ -43,9 +50,11 @@ class Hellish_Simplicity_Setup {
 		add_action( 'wp_enqueue_scripts',                   array( $this, 'comment_reply' ) );
 		add_action( 'customize_register',                   array( $this, 'customize_register' ) );
 		add_action( 'customize_render_control_header-text', array( $this, 'customizer_help' ) );
+		add_action( 'admin_head',                           array( $this, 'admin_menu_link' ) );
+		add_action( 'admin_bar_menu',                       array( $this, 'admin_bar_link' ), 999 );
+
 		add_filter( 'wp_title',                             array( $this, 'title_tag' ), 10, 2 );
 		add_filter( 'post_class',                           array( $this, 'add_last_post_class' ) );
-
 	}
 
 	/**
@@ -79,7 +88,7 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function stylesheet() {
 		if ( ! is_admin() ) {
-			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style.min.css', array(), '1.6.4' );
+			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style.min.css', array(), $this->version_number );
 		}
 	}
 
@@ -122,11 +131,11 @@ class Hellish_Simplicity_Setup {
 	 * @param  object  $wp_customize  Theme Customizer object
 	 */
 	public function customize_register( $wp_customize ) {
-	
+
 		// Theme Footer
 		$wp_customize->add_setting( $this->header_text_option, array(
 			'type'              => 'option',
-			'sanitize_callback' => array( $this, 'sanitize_header_text' ),
+			'sanitize_callback' => 'wp_kses_post',
 			'capability'        => 'edit_theme_options',
 		) );
 		$wp_customize->add_section( 'header_text', array(
@@ -139,17 +148,6 @@ class Hellish_Simplicity_Setup {
 			'type'              => 'text',
 		) );
 
-	}
-
-	/**
-	 * Validate inputs.
-	 * Perform security checks on inputted data.
-	 *
-	 * @param   array  $input  The raw unsanitized header text
-	 * @return  array  $input  The sanitized header text
-	 */
-	public function sanitize_header_text( $input ) {
-		return wp_kses_post( $input );
 	}
 
 	/**
@@ -195,6 +193,48 @@ class Hellish_Simplicity_Setup {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Adds an admin menu link to the header section of the customizer.
+	 *
+	 * @global array $submenu
+	 */
+	public function admin_menu_link() {
+		global $submenu;
+
+		if ( ! is_admin() && ! current_user_can( 'edit_theme_options' ) ) {
+			return;
+		}
+
+		$themes_submenu[0] = array(
+			0 => __( 'Header', 'hellish-simplicity' ),
+			1 => 'edit_theme_options',
+			2 => 'customize.php?autofocus%5Bcontrol%5D=header-text',
+		);
+
+		// Merging menus together
+		$submenu['themes.php'] = array_merge( $submenu['themes.php'], $themes_submenu );
+	}
+
+	/**
+	 * Adds an admin bar link to the header section of the customizer.
+	 * 
+	 * @param   object  $wp_admin_bar  The admin bar object
+	 */
+	public function admin_bar_link( $wp_admin_bar ) {
+
+		if ( is_admin() && ! current_user_can( 'edit_theme_options' ) ) {
+			return;
+		}
+
+		$args = array(
+			'id'     => 'header_text',
+			'href'   => admin_url() . 'customize.php?autofocus%5Bcontrol%5D=header-text',
+			'title'  => __( 'Header', 'hellish-simplicity' ),
+			'parent' => 'appearance',
+		);
+		$wp_admin_bar->add_node( $args );
 	}
 
 }
