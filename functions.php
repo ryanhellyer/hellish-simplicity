@@ -42,19 +42,21 @@ class Hellish_Simplicity_Setup {
 		global $content_width;
 		$content_width = 680;
 
-		add_action( 'admin_init',                           array( $this, 'add_option' ) );
-		add_action( 'after_setup_theme',                    array( $this, 'theme_setup' ) );
-		add_action( 'widgets_init',                         array( $this, 'widgets_init' ) );
-		add_action( 'wp_enqueue_scripts',                   array( $this, 'stylesheet' ) );
-		add_action( 'admin_init',                           array( $this, 'editor_stylesheet' ) );
-		add_action( 'wp_enqueue_scripts',                   array( $this, 'comment_reply' ) );
-		add_action( 'customize_register',                   array( $this, 'customize_register' ) );
-		add_action( 'customize_render_control_header-text', array( $this, 'customizer_help' ) );
-		add_action( 'admin_head',                           array( $this, 'admin_menu_link' ) );
-		add_action( 'admin_bar_menu',                       array( $this, 'admin_bar_link' ), 999 );
+		// Add action hooks
+		add_action( 'admin_init',                                            array( $this, 'add_option' ) );
+		add_action( 'after_setup_theme',                                     array( $this, 'theme_setup' ) );
+		add_action( 'widgets_init',                                          array( $this, 'widgets_init' ) );
+		add_action( 'wp_enqueue_scripts',                                    array( $this, 'stylesheet' ) );
+		add_action( 'admin_init',                                            array( $this, 'editor_stylesheet' ) );
+		add_action( 'wp_enqueue_scripts',                                    array( $this, 'comment_reply' ) );
+		add_action( 'customize_register',                                    array( $this, 'customize_register' ) );
+		add_action( 'customize_render_control_' . $this->header_text_option, array( $this, 'customizer_help' ) );
+		add_action( 'admin_head',                                            array( $this, 'admin_menu_link' ) );
+		add_action( 'admin_bar_menu',                                        array( $this, 'admin_bar_link' ), 999 );
 
-		add_filter( 'wp_title',                             array( $this, 'title_tag' ), 10, 2 );
-		add_filter( 'post_class',                           array( $this, 'add_last_post_class' ) );
+		// Add filters
+		add_filter( 'wp_title',                                              array( $this, 'title_tag' ), 10, 2 );
+		add_filter( 'post_class',                                            array( $this, 'add_last_post_class' ) );
 	}
 
 	/**
@@ -203,6 +205,7 @@ class Hellish_Simplicity_Setup {
 	public function admin_menu_link() {
 		global $submenu;
 
+		// Only display header admin menu link when in admin panel and when user is allowed to edit theme options
 		if ( ! is_admin() && ! current_user_can( 'edit_theme_options' ) ) {
 			return;
 		}
@@ -210,7 +213,7 @@ class Hellish_Simplicity_Setup {
 		$themes_submenu[0] = array(
 			0 => __( 'Header', 'hellish-simplicity' ),
 			1 => 'edit_theme_options',
-			2 => 'customize.php?autofocus%5Bcontrol%5D=header-text',
+			2 => 'customize.php?autofocus%5Bcontrol%5D=' . $this->header_text_option,
 		);
 
 		// Merging menus together
@@ -224,13 +227,14 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function admin_bar_link( $wp_admin_bar ) {
 
+		// Only display header admin bar link when on frontend and when user is allowed to edit theme options
 		if ( is_admin() && ! current_user_can( 'edit_theme_options' ) ) {
 			return;
 		}
 
 		$args = array(
 			'id'     => 'header_text',
-			'href'   => admin_url() . 'customize.php?autofocus%5Bcontrol%5D=header-text',
+			'href'   => admin_url() . 'customize.php?autofocus%5Bcontrol%5D=' . $this->header_text_option,
 			'title'  => __( 'Header', 'hellish-simplicity' ),
 			'parent' => 'appearance',
 		);
