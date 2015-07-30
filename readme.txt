@@ -10,6 +10,13 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == Changelog ==
 
+== Version 1.8 ==
+August 1st 2015
+* Changed header link to point to header section of customizer
+* Fixed vertical scrollbars bug
+* Including SASS map on recommendation of Rarst
+* Fixed YARRP related styling bug
+
 == Version 1.7.8 ==
 March 22nd 2015
 * Fixed pagination code which displayed empty UL tags when not in use
