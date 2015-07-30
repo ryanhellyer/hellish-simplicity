@@ -3,146 +3,135 @@ msgstr ""
 "Project-Id-Version: Hellish Simplicity\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-11 20:34+0100\n"
-"PO-Revision-Date: 2015-03-21 18:07+0100\n"
+"PO-Revision-Date: 2013-05-11 22:33+0100\n"
 "Last-Translator: Ryan Hellyer <ryan@pixopoint.com>\n"
 "Language-Team: \n"
-"Language: de\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _e;__\n"
-"X-Poedit-Basepath: /home/ryan/Desktop/www/wordpress/wp-content/themes/"
-"hellish-simplicity/\n"
-"X-Generator: Poedit 1.5.4\n"
-"X-Poedit-SearchPath-0: /home/ryan/Desktop/www/wordpress/wp-content/themes/"
-"hellish-simplicity\n"
+"X-Poedit-Basepath: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/\n"
+"X-Poedit-SearchPath-0: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity\n"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/sidebar.php:14
 msgid "Please add widgets to the sidebar."
-msgstr "Widgets in die Seitenleiste einfügen."
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/footer.php:16
 msgid "Copyright"
-msgstr "Copyright"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/footer.php:17
 msgid "WordPress theme by"
-msgstr "WordPress Theme von"
+msgstr "WordPress temaer av"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:76
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:77
 msgid "Header"
-msgstr "Seitenkopf"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:88
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:89
 msgid "Customize"
-msgstr "Anpassen"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:143
 msgid "Custom Header"
-msgstr "Seitenkopf anpassen"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:147
 msgid "Options saved"
-msgstr "Optionen gespeichert"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:153
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:248
 msgid "Header Text"
-msgstr "Seitenkopf Text"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:170
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:267
 msgid "Example text:"
-msgstr "Beispiel Text:"
+msgstr "Eksemple tekst:"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:178
 msgid "Save &raquo;"
-msgstr "Speichern &raquo;"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:223
 msgid "Sidebar"
-msgstr "Seitenleiste"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/functions.php:253
 msgid "Header text"
-msgstr "Seitenkopf Text"
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/comments.php:17
 msgid "Comment navigation"
-msgstr "Navigation für Kommentare"
+msgstr "Kommentarnavigasjon"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/comments.php:18
 msgid "&larr; Older Comments"
-msgstr "&larr; Ältere Kommentare"
+msgstr "&larr; Eldre kommentarer"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/comments.php:19
 msgid "Newer Comments &rarr;"
-msgstr "Neuere Kommentar &rarr;"
+msgstr "Nyere kommentarer &rarr;"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/comments.php:72
 msgid "Comments are closed."
-msgstr "Kommentarfunktion ausgeschaltet"
+msgstr "Det er stengt for kommentarer."
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:17
 #, php-format
 msgid "Search Results for: \"%s\" ..."
-msgstr "Suchresultat für:  \"%s\" ..."
+msgstr "Søk resultar for:  \"%s\" ..."
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:32
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/full-width.php:24
 #, php-format
 msgid "Permalink to %s"
-msgstr "Permalink auf %s"
+msgstr "Permalenke til %s"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:41
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/full-width.php:29
 msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
-msgstr "Weiter lesen <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Les videre <span class=\"meta-nav\">&rarr;</span>"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:42
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/full-width.php:30
 msgid "Pages:"
-msgstr "Seiten:"
+msgstr "Sider:"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:68
 #, php-format
-msgid ""
-"Posted on <a href=\"%1$s\" title=\"%2$s\" rel=\"bookmark\"><time class="
-"\"entry-date\" datetime=\"%3$s\">%4$s</time></a><span class=\"byline\"> by "
-"<span class=\"author vcard\"><a class=\"url fn n\" href=\"%5$s\" title=\"%6$s"
-"\" rel=\"author\">%7$s</a></span></span>"
-msgstr ""
-"Geschrieben am <a href=\"%1$s\" title=\"%2$s\" rel=\"bookmark\"><time class="
-"\"entry-date\" datetime=\"%3$s\">%4$s</time></a><span class=\"byline\"> von "
-"<span class=\"author vcard\"><a class=\"url fn n\" href=\"%5$s\" title=\"%6$s"
-"\" rel=\"author\">%7$s</a></span></span>"
+msgid "Posted on <a href=\"%1$s\" title=\"%2$s\" rel=\"bookmark\"><time class=\"entry-date\" datetime=\"%3$s\">%4$s</time></a><span class=\"byline\"> by <span class=\"author vcard\"><a class=\"url fn n\" href=\"%5$s\" title=\"%6$s\" rel=\"author\">%7$s</a></span></span>"
+msgstr "Publisert <a href=\"%1$s\" title=\"%2$s\" rel=\"bookmark\"><time class=\"entry-date\" datetime=\"%3$s\">%4$s</time></a><span class=\"byline\"> av <span class=\"author vcard\"><a class=\"url fn n\" href=\"%5$s\" title=\"%6$s\" rel=\"author\">%7$s</a></span></span>"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:74
 #, php-format
 msgid "View all posts by %s"
-msgstr "Alle Beiträge ansehen %s"
+msgstr "Vis alle innlegg av %s"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:79
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:88
 msgid ", "
-msgstr ","
+msgstr ""
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:83
 #, php-format
 msgid " in %1$s"
-msgstr " in %1$s"
+msgstr " i %1$s"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:93
 #, php-format
 msgid "Tagged %1$s"
-msgstr "Markiert %1$s"
+msgstr "Merket %1$s"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:100
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/full-width.php:37
 msgid "Leave a comment"
-msgstr "Kommentar schreiben"
+msgstr "legg igjen en kommentar"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:100
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/full-width.php:37
@@ -152,38 +141,34 @@ msgstr "1 Kommentar"
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:100
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/full-width.php:37
 msgid "% Comments"
-msgstr "% Kommentare"
+msgstr "8 Kommentar"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/index.php:104
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/full-width.php:41
 msgid "Edit"
-msgstr "Editieren"
+msgstr "Rediger"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/searchform.php:10
 msgid "Search"
-msgstr "Suchen"
+msgstr "Søk"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/template-parts/no-results.php:14
 msgid "Nothing Found"
-msgstr "Nichts gefunden"
+msgstr "Ingenting funnet"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/template-parts/no-results.php:21
-msgid ""
-"Sorry, but nothing matched your search terms. Please try again with some "
-"different keywords."
-msgstr "Leider nichts gefunden. Bitte mit anderen Suchkriterien versuchen."
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Beklager, men det ble ikke funnet. Kanskje et søk vil hjelpe deg å finne et relatert innlegg."
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/template-parts/no-results.php:26
-msgid ""
-"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
-"searching can help."
-msgstr ""
-"Wir finden nicht, was du wolltest. Vielleicht hilft die Suchfunktion weiter."
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Det synes ikke som at vi kan finne det du leter etter. Kanskje det hjelper å søke, eller å sjekke en av lenkene nedenfor."
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/template-parts/numeric-pagination.php:39
 msgid "&laquo; Previous"
-msgstr "&laquo; Zurück"
+msgstr "&laquo; Forrige"
 
 #: /home/ryan/Desktop/www/wordpress/wp-content/themes/hellish-simplicity/template-parts/numeric-pagination.php:88
 msgid "Next &raquo;"
-msgstr "Nächste &raquo;"
+msgstr "Neste &raquo;"
+
