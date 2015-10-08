@@ -14,7 +14,7 @@
 <footer id="site-footer" role="contentinfo">
 	<div id="site-info">
 		<?php _e( 'Copyright', 'hellish-simplicity' ); ?> &copy; <?php bloginfo( 'name' ); ?> <?php echo date( 'Y' ); ?>. 
-		<?php printf( __( 'WordPress theme by %s.', 'hellish-simplicity' ), '<a href="https://geek.hellyer.kiwi/" title="Ryan Hellyer">Ryan Hellyer</a>' ); ?>
+		<?php printf( esc_html__( 'WordPress theme by %s.', 'hellish-simplicity' ), '<a href="https://geek.hellyer.kiwi/" title="Ryan Hellyer">Ryan Hellyer</a>' ); ?>
 	</div><!-- #site-info -->
 </footer><!-- #colophon .site-footer -->
 

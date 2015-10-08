@@ -14,10 +14,10 @@ function hellish_comments_navigation( $id = '' ) {
 	if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) {
 		?>
 	<nav role="navigation" id="<?php echo esc_attr( $id ); ?>" class="site-navigation comment-navigation">
-		<h1 class="assistive-text"><?php _e( 'Comment navigation', 'hellish-simplicity' ); ?></h1>
-		<div class="nav-previous"><?php previous_comments_link( __( '&larr; Older Comments', 'hellish-simplicity' ) ); ?></div>
-		<div class="nav-next"><?php next_comments_link( __( 'Newer Comments &rarr;', 'hellish-simplicity' ) ); ?></div>
-	</nav><!-- #comment-nav-<?php echo $id; ?> .site-navigation .comment-navigation --><?php
+		<h1 class="assistive-text"><?php esc_html_e( 'Comment navigation', 'hellish-simplicity' ); ?></h1>
+		<div class="nav-previous"><?php previous_comments_link( esc_html__( '&larr; Older Comments', 'hellish-simplicity' ) ); ?></div>
+		<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments &rarr;', 'hellish-simplicity' ) ); ?></div>
+	</nav><!-- #comment-nav-<?php echo absint( $id ); ?> .site-navigation .comment-navigation --><?php
 	}
 }
 
@@ -48,16 +48,15 @@ if ( have_comments() ) { ?>
 				'hellish-simplicity'
 			),
 			number_format_i18n( get_comments_number() ),
-			'<span>' . get_the_title() . '</span>'
+			'<span>' . esc_html( get_the_title() ) . '</span>'
 		);
 	?></h2><?php
 
 	hellish_comments_navigation( 'comment-nav-above' );
 	?>
 
-	<ol class="commentlist"><?php wp_list_comments(); ?></ol><!-- .commentlist -->
+	<ol class="commentlist"><?php wp_list_comments(); ?></ol><!-- .commentlist --><?php
 
-	<?php
 	hellish_comments_navigation( 'comment-nav-below' );
 
 }
@@ -70,7 +69,7 @@ if (
 	'0' != get_comments_number() &&
 	post_type_supports( get_post_type(), 'comments' )
 ) {
-	echo '<p class="nocomments">' . __( 'Comments are closed.', 'hellish-simplicity' ) . '</p>';
+	echo '<p class="nocomments">' . esc_html__( 'Comments are closed.', 'hellish-simplicity' ) . '</p>';
 }
 
 /**

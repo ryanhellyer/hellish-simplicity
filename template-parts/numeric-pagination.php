@@ -41,7 +41,7 @@ if ( ! is_singular() ) { // do nothing
 
 	// Previous Post Link
 	if ( get_previous_posts_link() ) {
-		printf( '<li>%s</li>' . "\n", get_previous_posts_link( __( '&laquo; Previous', 'hellish-simplicity') ) );
+		printf( '<li>%s</li>' . "\n", get_previous_posts_link( esc_html__( '&laquo; Previous', 'hellish-simplicity') ) );
 	}
 
 	// Link to first Page, plus ellipeses, if necessary
@@ -98,7 +98,7 @@ if ( ! is_singular() ) { // do nothing
 	if ( get_next_posts_link() ) {
 		printf(
 			"\n" . '			<li>%s</li>',
-			get_next_posts_link( __( 'Next &raquo;', 'hellish-simplicity' ) )
+			get_next_posts_link( esc_html__( 'Next &raquo;', 'hellish-simplicity' ) )
 		);
 	}
 

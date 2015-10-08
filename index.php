@@ -14,7 +14,7 @@ get_header(); ?>
 // If on search page, then display what we searched for
 if ( is_search() ) { ?>
 		<h1 class="page-title">
-			<?php printf( __( 'Search Results for: "%s" ...', 'hellish-simplicity' ), get_search_query() ); ?>
+			<?php printf( esc_html__( 'Search Results for: "%s" ...', 'hellish-simplicity' ), get_search_query() ); ?>
 		</h1><?php
 }
 
@@ -46,8 +46,8 @@ if ( have_posts() ) {
 
 				// Display full content for home page and single post pages
 				if ( is_home() || is_single() || is_page() ) {
-					the_content( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
-					wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'hellish-simplicity' ), 'after' => '</div>' ) );
+					the_content( esc_html__( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
+					wp_link_pages( array( 'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'hellish-simplicity' ), 'after' => '</div>' ) );
 				} else {
 
 					// Use the built in thumbnail system, otherwise attempt to display the latest attachment
@@ -72,7 +72,7 @@ if ( have_posts() ) {
 					esc_attr( get_the_date( 'c' ) ),
 					esc_html( get_the_date() ),
 					esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-					esc_attr( sprintf( __( 'View all posts by %s', 'hellish-simplicity' ), get_the_author() ) ),
+					sprintf( esc_html__( 'View all posts by %s', 'hellish-simplicity' ), get_the_author() ),
 					get_the_author()
 				);
 
@@ -82,28 +82,28 @@ if ( have_posts() ) {
 				if ( 1 < count( $all_categories ) && $categories_list ) {
 					?>
 					<span class="cat-links">
-						<?php printf( __( ' in %1$s', 'hellish-simplicity' ), $categories_list ); ?>
+						<?php printf( esc_html__( ' in %1$s', 'hellish-simplicity' ), $categories_list ); ?>
 					</span><?php
 				}
 
 				// Tag listings
-				$tags_list = get_the_tag_list( '', __( ', ', 'hellish-simplicity' ) );
+				$tags_list = get_the_tag_list( '', esc_html__( ', ', 'hellish-simplicity' ) );
 				if ( $tags_list ) {
 				?>
 				<span class="sep"> | </span>
 				<span class="tags-links">
-					<?php printf( __( 'Tagged %1$s', 'hellish-simplicity' ), $tags_list ); ?>
+					<?php printf( esc_html__( 'Tagged %1$s', 'hellish-simplicity' ), $tags_list ); ?>
 				</span><?php
 				}
 
 				// Comments info.
 				if ( ! post_password_required() && ( comments_open() || '0' != get_comments_number() ) ) { ?>
 				<span class="sep"> | </span>
-				<span class="comments-link"><?php comments_popup_link( __( 'Leave a comment', 'hellish-simplicity' ), __( '1 Comment', 'hellish-simplicity' ), __( '% Comments', 'hellish-simplicity' ) ); ?></span><?php
+				<span class="comments-link"><?php comments_popup_link( esc_html__( 'Leave a comment', 'hellish-simplicity' ), esc_html__( '1 Comment', 'hellish-simplicity' ), esc_html__( '% Comments', 'hellish-simplicity' ) ); ?></span><?php
 				}
 
 				// Edit link
-				edit_post_link( __( 'Edit', 'hellish-simplicity' ), '<span class="sep"> | </span><span class="edit-link">', '</span>' );
+				edit_post_link( esc_html__( 'Edit', 'hellish-simplicity' ), '<span class="sep"> | </span><span class="edit-link">', '</span>' );
 				?>
 			</footer><!-- .entry-meta --><?php
 			} ?>
