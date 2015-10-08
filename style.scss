@@ -653,11 +653,13 @@ input[type=submit] {
 	background: #fafafa;
 	border: $border;
 	color: #666;
+	max-width: 100%;
 }
 
 input[type=email],
 input[type=text] {
 	width: 300px;
+	max-width: 88%;
 }
 
 textarea {
@@ -748,6 +750,10 @@ input[type=submit]:hover {
 		padding: 3%;
 		width: 94%;
 		border-left: none;
+	}
+
+	textarea {
+		max-width: 88%;
 	}
 
 }
