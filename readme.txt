@@ -17,6 +17,7 @@ October 8th 2015
 * Fixed non-closing aside tag bug
 * Fixed output bugs in search form
 * Escaped most translation strings - needed since dot org now allows external translations
+* Improved styling for textarea's
 
 == Version 1.8 ==
 August 1st 2015
