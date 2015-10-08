@@ -14,7 +14,8 @@ A clean simple design. Responsive design makes the theme look good on all device
 October 8th 2015
 * Fixed bug in title tags
 * Switching to constants instead of public variables where possible
-* Fixing non-closing aside tag bug
+* Fixed non-closing aside tag bug
+* Fixed output bugs in search form
 
 == Version 1.8 ==
 August 1st 2015
