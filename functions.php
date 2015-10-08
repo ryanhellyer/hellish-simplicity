@@ -55,7 +55,6 @@ class Hellish_Simplicity_Setup {
 		add_action( 'admin_bar_menu',                                        array( $this, 'admin_bar_link' ), 999 );
 
 		// Add filters
-		add_filter( 'wp_title',                                              array( $this, 'title_tag' ), 10, 2 );
 		add_filter( 'post_class',                                            array( $this, 'add_last_post_class' ) );
 	}
 
@@ -104,6 +103,9 @@ class Hellish_Simplicity_Setup {
 
 		// Add default posts and comments RSS feed links to head
 		add_theme_support( 'automatic-feed-links' );
+
+		// Add title tags
+		add_theme_support( 'title-tag' );
 
 		// Enable support for Post Thumbnails
 		add_theme_support( 'post-thumbnails' );
@@ -162,22 +164,6 @@ class Hellish_Simplicity_Setup {
 				' . __( 'Example text:', 'hellish-simplicity' ) . ' <code>' . esc_html( $this->default_header_text ) . '</code>
 			</p>
 		</li>';
-	}
-
-	/**
-	 * Adding extra functionality to title tags.
-	 * For more advanced title tag functionality, please use an SEO plugin.
-	 *
-	 * @param   string  $title    Default title text for current view.
-	 * @param   string  $sep      Optional separator
-	 * @return  string  Filtered  title
-	 */
-	public function title_tag( $title ) {
-
-		// Add the site name.
-		$title .= get_bloginfo( 'name' );
-
-		return $title;
 	}
 
 	/**
