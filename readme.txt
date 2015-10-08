@@ -10,10 +10,11 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == Changelog ==
 
-== Version 1.8.1 ==
+== Version 1.9 ==
 October 8th 2015
 * Fixed bug in title tags
 * Switching to constants instead of public variables where possible
+* Fixing non-closing aside tag bug
 
 == Version 1.8 ==
 August 1st 2015
