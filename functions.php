@@ -16,7 +16,7 @@ class Hellish_Simplicity_Setup {
 	 * 
 	 * @var string
 	 */
-	public $version_number = '1.9';
+	const VERSION_NUMBER = '1.9';
 
 	/**
 	 * The default header text.
@@ -89,7 +89,7 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function stylesheet() {
 		if ( ! is_admin() ) {
-			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style.min.css', array(), $this->version_number );
+			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style.min.css', array(), self::VERSION_NUMBER );
 		}
 	}
 
