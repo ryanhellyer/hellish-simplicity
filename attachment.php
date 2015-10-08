@@ -28,7 +28,7 @@ if ( have_posts() ) {
 					printf( ' <span class="attachment-meta full-size-link"><a href="%1$s" title="%2$s">%3$s (%4$s &times; %5$s)</a></span>',
 						esc_url( wp_get_attachment_url() ),
 						esc_attr__( 'Link to full-size image', 'hellish-simplicity' ),
-						__( 'Full resolution', 'hellish-simplicity' ),
+						esc_html__( 'Full resolution', 'hellish-simplicity' ),
 						absint( $metadata['width'] ),
 						absint( $metadata['height'] )
 					);
@@ -43,8 +43,8 @@ if ( have_posts() ) {
 				<div class="attachment"><?php
 					$post = get_post();
 					printf( '<a href="%1$s" title="%2$s" rel="attachment">%3$s</a>',
-						wp_get_attachment_url(),
-						the_title_attribute( array( 'echo' => false ) ),
+						esc_url( wp_get_attachment_url() ),
+						esc_attr( the_title_attribute( array( 'echo' => false ) ) ),
 						wp_get_attachment_image( $post->ID, 'attachment-page' )
 					);
 					?>
@@ -59,9 +59,15 @@ if ( have_posts() ) {
 			<?php endif; ?>
 
 			<?php if ( ! empty( $post->post_content ) ) : ?>
-			<div class="entry-description">
-				<?php the_content(); ?>
-				<?php wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'twentythirteen' ), 'after' => '</div>' ) ); ?>
+			<div class="entry-description"><?php
+				the_content();
+				wp_link_pages(
+					array(
+						'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'hellish-simplicity' ),
+						'after'  => '</div>'
+					)
+				);
+				?>
 			</div><!-- .entry-description -->
 			<?php endif; ?>
 
