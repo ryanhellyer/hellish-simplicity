@@ -16,21 +16,21 @@ class Hellish_Simplicity_Setup {
 	 * 
 	 * @var string
 	 */
-	public $version_number = '1.8';
+	public $version_number = '1.9';
 
 	/**
 	 * The default header text.
 	 * 
 	 * @var string
 	 */
-	public $default_header_text = 'Custom<span>Header</span><small>.com</small>';
+	const DEFAULT_HEADER_TEXT = 'Custom<span>Header</span><small>.com</small>';
 
 	/**
 	 * The header text option name.
 	 * 
 	 * @var string
 	 */
-	public $header_text_option = 'header-text';
+	const HEADER_TEXT_OPTION = 'header-text';
 
 	/**
 	 * Constructor.
@@ -50,7 +50,7 @@ class Hellish_Simplicity_Setup {
 		add_action( 'admin_init',                                            array( $this, 'editor_stylesheet' ) );
 		add_action( 'wp_enqueue_scripts',                                    array( $this, 'comment_reply' ) );
 		add_action( 'customize_register',                                    array( $this, 'customize_register' ) );
-		add_action( 'customize_render_control_' . $this->header_text_option, array( $this, 'customizer_help' ) );
+		add_action( 'customize_render_control_' . self::HEADER_TEXT_OPTION,  array( $this, 'customizer_help' ) );
 		add_action( 'admin_head',                                            array( $this, 'admin_menu_link' ) );
 		add_action( 'admin_bar_menu',                                        array( $this, 'admin_bar_link' ), 999 );
 
@@ -63,8 +63,8 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function add_option() {
 		add_option(
-			$this->header_text_option, // The header text option
-			$this->default_header_text // The default header text
+			self::HEADER_TEXT_OPTION, // The header text option
+			self::DEFAULT_HEADER_TEXT // The default header text
 		);
 	}
 
@@ -137,7 +137,7 @@ class Hellish_Simplicity_Setup {
 	public function customize_register( $wp_customize ) {
 
 		// Theme Footer
-		$wp_customize->add_setting( $this->header_text_option, array(
+		$wp_customize->add_setting( self::HEADER_TEXT_OPTION, array(
 			'type'              => 'option',
 			'sanitize_callback' => 'wp_kses_post',
 			'capability'        => 'edit_theme_options',
@@ -146,7 +146,7 @@ class Hellish_Simplicity_Setup {
 			'title'             => __( 'Header Text', 'hellish-simplicity' ),
 			'priority'          => 10,
 		) );
-		$wp_customize->add_control( $this->header_text_option, array(
+		$wp_customize->add_control( self::HEADER_TEXT_OPTION, array(
 			'section'           => 'header_text',
 			'label'             => __( 'Header Text', 'hellish-simplicity' ),
 			'type'              => 'text',
@@ -161,7 +161,7 @@ class Hellish_Simplicity_Setup {
 		echo '
 		<li>
 			<p>
-				' . __( 'Example text:', 'hellish-simplicity' ) . ' <code>' . esc_html( $this->default_header_text ) . '</code>
+				' . __( 'Example text:', 'hellish-simplicity' ) . ' <code>' . esc_html( self::DEFAULT_HEADER_TEXT ) . '</code>
 			</p>
 		</li>';
 	}
@@ -199,7 +199,7 @@ class Hellish_Simplicity_Setup {
 		$themes_submenu[0] = array(
 			0 => __( 'Header', 'hellish-simplicity' ),
 			1 => 'edit_theme_options',
-			2 => 'customize.php?autofocus%5Bcontrol%5D=' . $this->header_text_option,
+			2 => 'customize.php?autofocus%5Bcontrol%5D=' . self::HEADER_TEXT_OPTION,
 		);
 
 		// Merging menus together
@@ -220,7 +220,7 @@ class Hellish_Simplicity_Setup {
 
 		$args = array(
 			'id'     => 'header_text',
-			'href'   => admin_url() . 'customize.php?autofocus%5Bcontrol%5D=' . $this->header_text_option,
+			'href'   => admin_url() . 'customize.php?autofocus%5Bcontrol%5D=' . self::HEADER_TEXT_OPTION,
 			'title'  => __( 'Header', 'hellish-simplicity' ),
 			'parent' => 'appearance',
 		);
