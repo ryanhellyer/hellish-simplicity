@@ -81,7 +81,7 @@ class Hellish_Simplicity_Setup {
 	 * Load editor stylesheet.
 	 */
 	public function editor_stylesheet() {
-		add_editor_style( 'editor-style.css' );
+		add_editor_style( 'css/editor-style.css' );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function stylesheet() {
 		if ( ! is_admin() ) {
-			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/style.min.css', array(), self::VERSION_NUMBER );
+			wp_enqueue_style( 'style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), self::VERSION_NUMBER );
 		}
 	}
 
