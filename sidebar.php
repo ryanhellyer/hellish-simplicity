@@ -23,7 +23,7 @@
 		<ul>
 			<?php wp_get_archives( array( 'type' => 'monthly' ) ); ?>
 		</ul>
-	<aside>
+	</aside>
 	<aside>
 		<h2 class="widget-title"><?php _e( 'Search', 'hellish-simplicity' ); ?></h2>
 		<?php get_search_form(); ?>
