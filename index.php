@@ -87,7 +87,7 @@ else {
 
 	// Show sidebar if not on full width template
 	if ( 'full-width.php' != basename( get_page_template() ) ) {
-		get_sidebar();
+		get_template_part( 'template-parts/sidebar' );
 	}
 
 	?>

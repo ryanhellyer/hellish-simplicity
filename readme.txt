@@ -19,6 +19,9 @@ October 8th 2015
 * Escaped most translation strings - needed since dot org now allows external translations
 * Improved styling for textarea's
 * Improved styling of forms, specifically JetPack / Grunion contact forms
+* Moved footer meta into template part
+* Moved CSS into sub-folder to clean up root folder
+* Moved sidebar into sub-folder to clean up root folder
 
 == Version 1.8 ==
 August 1st 2015
