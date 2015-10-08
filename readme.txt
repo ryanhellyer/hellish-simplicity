@@ -16,6 +16,9 @@ August 1st 2015
 * Fixed vertical scrollbars bug
 * Including SASS map on recommendation of Rarst
 * Fixed YARRP related styling bug
+* Switched to add_theme_support for adding title tags.
+* Abstracted code from full page template
+* Miscellaneous syntax improvements
 
 == Version 1.7.8 ==
 March 22nd 2015
