@@ -8,11 +8,19 @@
  * @package Hellish Simplicity
  * @since Hellish Simplicity 1.1
  */
+
+// Set heading tags
+if ( is_search() ) {
+	$post_heading_tag = 'h2';
+} else {
+	$post_heading_tag = 'h1';
+}
+
 ?>
 
-<article id="post-0" class="post no-results not-found">
+<article id="post-0" class="post no-results not-found last-post">
 	<header class="entry-header">
-		<h1 class="entry-title"><?php esc_html_e( 'Nothing Found', 'hellish-simplicity' ); ?></h1>
+		<<?php echo $post_heading_tag; // WPCS: XSS OK. ?> class="entry-title"><?php esc_html_e( 'Nothing Found', 'hellish-simplicity' ); ?></<?php echo $post_heading_tag; // WPCS: XSS OK. ?>>
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
@@ -27,4 +35,4 @@
 		?>
 
 	</div><!-- .entry-content -->
-</article><!-- #post-0 .post .no-results .not-found -->
+</article><!-- #post-0 .post .no-results .not-found .last-post -->

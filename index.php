@@ -15,7 +15,14 @@ get_header(); ?>
 if ( is_search() ) { ?>
 		<h1 class="page-title">
 			<?php printf( esc_html__( 'Search Results for: "%s" ...', 'hellish-simplicity' ), get_search_query() ); ?>
-		</h1><?php
+		</h1><!-- .page-title --><?php
+}
+
+// Set heading tags
+if ( is_home() || is_search() ) {
+	$post_heading_tag = 'h2';
+} else {
+	$post_heading_tag = 'h1';
 }
 
 // Load main loop
@@ -29,23 +36,22 @@ if ( have_posts() ) {
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 			<header class="entry-header">
-				<h1 class="entry-title"><?php
+				<<?php echo $post_heading_tag; // WPCS: XSS OK. ?> class="entry-title"><?php
 
 					// Don't display links on singular post titles
 					if ( is_singular() ) {
 						the_title();
 					} else {
-						?>
-						<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'hellish-simplicity' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a><?php
+						?><a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'hellish-simplicity' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a><?php
 					}
 
-					?></h1>
+					?></<?php echo $post_heading_tag; // WPCS: XSS OK. ?>><!-- .entry-title -->
 			</header><!-- .entry-header -->
 
 			<div class="entry-content"><?php
 
 				// Display full content for home page and single post pages
-				if ( is_home() || is_single() || is_page() ) {
+				if ( is_home() || is_singular() ) {
 					the_content( esc_html__( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
 					wp_link_pages( array( 'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'hellish-simplicity' ), 'after' => '</div>' ) );
 				} else {

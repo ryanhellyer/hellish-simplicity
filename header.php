@@ -19,23 +19,41 @@
 </head>
 <body <?php body_class(); ?>>
 
-<header id="site-header" role="banner">
-	<div class="hgroup">
-		<h1>
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-				<?php
-					// Output header text (need fallback to keep WordPress.org them demo happy)
-					$header_text = get_option( 'header-text' );
-					if ( $header_text ) {
-						echo $header_text; // Not escaped, since needs to include HTML
-					} else {
-						echo 'Hellish<span>Simplicity</span><small>.tld</small>';
-					}
-				?>
-			</a>
-		</h1>
-		<h2><?php bloginfo( 'description' ); ?></h2>
-	</div><!-- .hgroup -->
-</header><!-- #masthead -->
+<a class="skip-link screen-reader-text" href="#main"><?php esc_html_e( 'Skip to content', 'hellish-simplicity' ); ?></a>
 
-<div id="main" class="site-main">
+<header id="site-header" role="banner">
+	<div class="site-branding">
+		<?php
+
+		// Only use H1 tag for home page, since all other pages have their own H1 tag.
+		if ( is_home() ) {
+			echo '<h1>';
+		}
+
+		echo '<a id="page-title" href="' . esc_url( home_url( '/' ) ) . '" title="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '" rel="home">';
+		// Output header text (need fallback to keep WordPress.org them demo happy)
+		$header_text = get_option( 'header-text' );
+		if ( $header_text ) {
+
+			$allowed_html = array(
+				'small' => array(),
+				'span' => array(),
+			);
+			echo wp_kses( $header_text, $allowed_html );
+
+		} else {
+			echo 'Hellish<span>Simplicity</span><small>.tld</small>';
+		}
+		echo '</a>';
+
+		// Only use H1 tag for home page, since all other pages have their own H1 tag.
+		if ( is_home() ) {
+			echo '</h1>';
+		}
+
+		?>
+		<h2><?php bloginfo( 'description' ); ?></h2>
+	</div><!-- .site-branding -->
+</header><!-- #site-header -->
+
+<main id="main">

@@ -14,7 +14,7 @@ function hellish_comments_navigation( $id = '' ) {
 	if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) {
 		?>
 	<nav role="navigation" id="<?php echo esc_attr( $id ); ?>" class="site-navigation comment-navigation">
-		<h1 class="assistive-text"><?php esc_html_e( 'Comment navigation', 'hellish-simplicity' ); ?></h1>
+		<h1 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'hellish-simplicity' ); ?></h1>
 		<div class="nav-previous"><?php previous_comments_link( esc_html__( '&larr; Older Comments', 'hellish-simplicity' ) ); ?></div>
 		<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments &rarr;', 'hellish-simplicity' ) ); ?></div>
 	</nav><!-- #comment-nav-<?php echo absint( $id ); ?> .site-navigation .comment-navigation --><?php

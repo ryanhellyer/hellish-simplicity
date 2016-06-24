@@ -16,7 +16,7 @@ class Hellish_Simplicity_Setup {
 	 * 
 	 * @var string
 	 */
-	const VERSION_NUMBER = '1.9';
+	const VERSION_NUMBER = '2.0';
 
 	/**
 	 * The default header text.
@@ -52,7 +52,6 @@ class Hellish_Simplicity_Setup {
 		add_action( 'customize_register',                                    array( $this, 'customize_register' ) );
 		add_action( 'customize_render_control_' . self::HEADER_TEXT_OPTION,  array( $this, 'customizer_help' ) );
 		add_action( 'admin_head',                                            array( $this, 'admin_menu_link' ) );
-		add_action( 'admin_bar_menu',                                        array( $this, 'admin_bar_link' ), 999 );
 
 		// Add filters
 		add_filter( 'post_class',                                            array( $this, 'add_last_post_class' ) );
@@ -119,7 +118,7 @@ class Hellish_Simplicity_Setup {
 	public function widgets_init() {
 		register_sidebar(
 			array(
-				'name'          => __( 'Sidebar', 'hellish-simplicity' ),
+				'name'          => esc_html__( 'Sidebar', 'hellish-simplicity' ),
 				'id'            => 'sidebar',
 				'before_widget' => '<aside id="%1$s" class="%2$s">',
 				'after_widget'  => '</aside>',
@@ -139,16 +138,16 @@ class Hellish_Simplicity_Setup {
 		// Theme Footer
 		$wp_customize->add_setting( self::HEADER_TEXT_OPTION, array(
 			'type'              => 'option',
-			'sanitize_callback' => 'wp_kses_post',
+			'sanitize_callback' => array( $this, 'sanitize' ),
 			'capability'        => 'edit_theme_options',
 		) );
 		$wp_customize->add_section( 'header_text', array(
-			'title'             => __( 'Header Text', 'hellish-simplicity' ),
+			'title'             => esc_html__( 'Header Text', 'hellish-simplicity' ),
 			'priority'          => 10,
 		) );
 		$wp_customize->add_control( self::HEADER_TEXT_OPTION, array(
 			'section'           => 'header_text',
-			'label'             => __( 'Header Text', 'hellish-simplicity' ),
+			'label'             => esc_html__( 'Header Text', 'hellish-simplicity' ),
 			'type'              => 'text',
 		) );
 
@@ -161,7 +160,7 @@ class Hellish_Simplicity_Setup {
 		echo '
 		<li>
 			<p>
-				' . __( 'Example text:', 'hellish-simplicity' ) . ' <code>' . esc_html( self::DEFAULT_HEADER_TEXT ) . '</code>
+				' . esc_html__( 'Example text:', 'hellish-simplicity' ) . ' <code>' . esc_html( self::DEFAULT_HEADER_TEXT ) . '</code>
 			</p>
 		</li>';
 	}
@@ -185,6 +184,8 @@ class Hellish_Simplicity_Setup {
 
 	/**
 	 * Adds an admin menu link to the header section of the customizer.
+	 * This is required because this theme does not use a graphical header image.
+	 * Standard graphical custom header images automatically add this.
 	 *
 	 * @global array $submenu
 	 */
@@ -197,7 +198,7 @@ class Hellish_Simplicity_Setup {
 		}
 
 		$themes_submenu[0] = array(
-			0 => __( 'Header', 'hellish-simplicity' ),
+			0 => esc_html__( 'Header', 'hellish-simplicity' ),
 			1 => 'edit_theme_options',
 			2 => 'customize.php?autofocus%5Bcontrol%5D=' . self::HEADER_TEXT_OPTION,
 		);
@@ -207,24 +208,17 @@ class Hellish_Simplicity_Setup {
 	}
 
 	/**
-	 * Adds an admin bar link to the header section of the customizer.
-	 * 
-	 * @param   object  $wp_admin_bar  The admin bar object
+	 * Sanitizing the header text.
+	 *
+	 * @param  string  $header_text  The header text
+	 * @return string  The sanitized header text
 	 */
-	public function admin_bar_link( $wp_admin_bar ) {
-
-		// Only display header admin bar link when on frontend and when user is allowed to edit theme options
-		if ( is_admin() && ! current_user_can( 'edit_theme_options' ) ) {
-			return;
-		}
-
-		$args = array(
-			'id'     => 'header_text',
-			'href'   => admin_url() . 'customize.php?autofocus%5Bcontrol%5D=' . self::HEADER_TEXT_OPTION,
-			'title'  => __( 'Header', 'hellish-simplicity' ),
-			'parent' => 'appearance',
+	static public function sanitize( $header_text ) {
+		$allowed_html = array(
+			'small' => array(),
+			'span' => array(),
 		);
-		$wp_admin_bar->add_node( $args );
+		return wp_kses( $header_text, $allowed_html );
 	}
 
 }

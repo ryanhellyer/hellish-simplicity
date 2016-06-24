@@ -10,6 +10,23 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == Changelog ==
 
+== Version 2.0 ==
+June 24th 2016
+* General update release to ensure all code meets current WordPress standards.
+* Converted .assistive-text class to .screen-reader-text class.
+* Converted #masthead to #site-header.
+* Removed redundant .site-main class.
+* Removed reference to colophon.
+* Converted #site-info to .site-info (makes SCSS easier to read).
+* Removed reference to non-existent.site-main.
+* Cleaned up H1 tag usage. No more H1 tag double ups.
+* Removed echo from esc_attr_e().
+* Removed unneeded .po file.
+* Removed admin bar custom header link (unneeded as custom headers no longer add this)
+* Documented logic behind the addition of an admin menu link.
+* Custom header text was sanitized more aggressively.
+* Translation strings were correctly escaped.
+
 == Version 1.9 ==
 October 8th 2015
 * Fixed bug in title tags
