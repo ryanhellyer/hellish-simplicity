@@ -212,6 +212,7 @@ class Hellish_Simplicity_Setup {
 	 *
 	 * @param  string  $header_text  The header text
 	 * @return string  The sanitized header text
+	 * @access static
 	 */
 	static public function sanitize( $header_text ) {
 		$allowed_html = array(

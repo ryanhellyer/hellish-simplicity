@@ -104,7 +104,8 @@ a:hover {
 	}
 
 	h1 {
-	font-size: 1em;
+		font-size: 1em;
+		margin: 0;
 	}
 
 	#page-title {
@@ -780,7 +781,7 @@ input[type=submit]:hover {
 -------------------------------------------------------------- */
 .rtl {
 
-	#site-header h1 {
+	.page-title {
 		float: right;
 		margin: 0 2% 0 0;
 	}

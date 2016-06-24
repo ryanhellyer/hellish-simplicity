@@ -1,6 +1,6 @@
 Hellish Simplicity WordPress Theme
 
-Copyright 2015 Ryan Hellyer
+Copyright 2016 Ryan Hellyer
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,9 @@ permission notices:
 
   Droid Serif by Steve Matteson
   Apache License, version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
+
+  HTML5 Shiv v3.6 by @afarkas, @jdalton, @jon_neal and @rem
+  dual-licensed GNU GPL, Version 2, and the MIT license
 
 Wherever third party code has been used, credit has been given in the code's
 comments.

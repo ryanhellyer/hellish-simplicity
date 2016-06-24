@@ -34,13 +34,7 @@
 		// Output header text (need fallback to keep WordPress.org them demo happy)
 		$header_text = get_option( 'header-text' );
 		if ( $header_text ) {
-
-			$allowed_html = array(
-				'small' => array(),
-				'span' => array(),
-			);
-			echo wp_kses( $header_text, $allowed_html );
-
+			echo Hellish_Simplicity_Setup::sanitize( $header_text );
 		} else {
 			echo 'Hellish<span>Simplicity</span><small>.tld</small>';
 		}

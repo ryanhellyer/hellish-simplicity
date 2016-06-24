@@ -10,6 +10,10 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == Changelog ==
 
+== Version 2.0.1 ==
+June 25th 2016
+* Used static method to sanitize header text (avoids replicating sanitization functionality).
+
 == Version 2.0 ==
 June 24th 2016
 * General update release to ensure all code meets current WordPress standards.
@@ -26,6 +30,7 @@ June 24th 2016
 * Documented logic behind the addition of an admin menu link.
 * Custom header text was sanitized more aggressively.
 * Translation strings were correctly escaped.
+* License updated with JS information.
 
 == Version 1.9 ==
 October 8th 2015
