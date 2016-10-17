@@ -10,6 +10,20 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == Changelog ==
 
+== Version 2.0.2 =
+October 16th 2016
+* HTML5 Shiv update
+* Enqueing the HTML5 shim
+* Prefixed style handle
+
+== Version 2.0.2 =
+September 23nd 2016
+* Documentation improvements
+
+== Version 2.0.1 =
+September 22nd 2016
+* Version bump to bypass broken wordpress.org theme uploader
+
 == Version 2.0.1 ==
 June 25th 2016
 * Used static method to sanitize header text (avoids replicating sanitization functionality).

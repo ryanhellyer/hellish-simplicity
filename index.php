@@ -58,7 +58,7 @@ if ( have_posts() ) {
 
 					// Use the built in thumbnail system, otherwise attempt to display the latest attachment
 					if ( has_post_thumbnail() ) {
-						the_post_thumbnail( 'excerpt-thumb' );
+						the_post_thumbnail( 'hellish-simplicity-excerpt-thumb' );
 					} elseif ( function_exists( 'get_the_image' ) ) {
 						get_the_image( array( 'size' => 'thumbnail' ) );
 					}

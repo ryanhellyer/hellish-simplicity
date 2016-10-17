@@ -45,7 +45,7 @@ if ( have_posts() ) {
 					printf( '<a href="%1$s" title="%2$s" rel="attachment">%3$s</a>',
 						esc_url( wp_get_attachment_url() ),
 						esc_attr( the_title_attribute( array( 'echo' => false ) ) ),
-						wp_get_attachment_image( $post->ID, 'attachment-page' )
+						wp_get_attachment_image( $post->ID, 'hellish-simplicity-attachment-page' )
 					);
 					?>
 
