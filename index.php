@@ -52,7 +52,7 @@ if ( have_posts() ) {
 
 				// Display full content for home page and single post pages
 				if ( is_home() || is_singular() ) {
-					the_content( esc_html__( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
+					the_content( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
 					wp_link_pages( array( 'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'hellish-simplicity' ), 'after' => '</div>' ) );
 				} else {
 
