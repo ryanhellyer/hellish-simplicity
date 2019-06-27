@@ -18,7 +18,11 @@
 </head>
 <body <?php body_class(); ?>>
 
-<a class="skip-link screen-reader-text" href="#main"><?php esc_html_e( 'Skip to content', 'hellish-simplicity' ); ?></a>
+<?php
+if ( 'full-width.php' != basename( get_page_template() ) ) { //we don't show sidebar in full-width template ?>
+	<a class="skip-link sr-only-focusable" href="#sidebar"><?php esc_html_e( 'Skip to sidebar', 'hellish-simplicity' ); ?></a>
+<?php }
+?>
 
 <header id="site-header" role="banner">
 	<div class="site-branding">
@@ -48,5 +52,3 @@
 		<h2><?php bloginfo( 'description' ); ?></h2>
 	</div><!-- .site-branding -->
 </header><!-- #site-header -->
-
-<main id="main">

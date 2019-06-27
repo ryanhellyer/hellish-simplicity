@@ -138,7 +138,7 @@ class Hellish_Simplicity_Setup {
 			array(
 				'name'          => esc_html__( 'Sidebar', 'hellish-simplicity' ),
 				'id'            => 'sidebar',
-				'before_widget' => '<aside id="%1$s" class="%2$s">',
+				'before_widget' => '<aside aria-label="%1$s" id="%1$s" class="%2$s">',
 				'after_widget'  => '</aside>',
 				'before_title'  => '<h2 class="widget-title">',
 				'after_title'   => '</h2>',

@@ -9,8 +9,6 @@
  */
 ?>
 
-</main><!-- #main -->
-
 <footer id="site-footer" role="contentinfo">
 	<div class="site-info">
 		<?php _e( 'Copyright', 'hellish-simplicity' ); ?> &copy; <?php bloginfo( 'name' ); ?> <?php echo date( 'Y' ); ?>. 

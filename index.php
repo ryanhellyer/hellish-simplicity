@@ -9,7 +9,7 @@
 get_header(); ?>
 
 <div id="content-area">
-	<div id="site-content" role="main"><?php
+	<main id="site-content"><?php
 
 // If on search page, then display what we searched for
 if ( is_search() ) { ?>
@@ -89,7 +89,7 @@ else {
 }
 ?>
 
-	</div><!-- #site-content --><?php
+</main><!-- #site-content --><?php
 
 	// Show sidebar if not on full width template
 	if ( 'full-width.php' != basename( get_page_template() ) ) {
