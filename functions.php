@@ -62,6 +62,7 @@ class Hellish_Simplicity_Setup {
 
 		// Add filters
 		add_filter( 'post_class',                                            array( $this, 'add_last_post_class' ) );
+		add_filter( 'dynamic_sidebar_params',              			         array( $this, 'accessible_widgets' ) );
 	}
 
 	/**
@@ -138,12 +139,35 @@ class Hellish_Simplicity_Setup {
 			array(
 				'name'          => esc_html__( 'Sidebar', 'hellish-simplicity' ),
 				'id'            => 'sidebar',
-				'before_widget' => '<aside aria-label="%1$s" id="%1$s" class="%2$s">',
+				'before_widget' => '<aside id="%1$s" class="%2$s">',
 				'after_widget'  => '</aside>',
 				'before_title'  => '<h2 class="widget-title">',
 				'after_title'   => '</h2>',
 			)
 		);
+	}
+
+	/**
+	* Use widget params to try and predict the correct tag and title
+	*/
+	public function accessible_widgets($params) {
+		$id = $params[0]['widget_id'];
+		$name = $params[0]['widget_name'];
+		if (!$name) {
+			$name = $id;
+		}
+
+		// var_dump($params[0]['widget_name'], $id);
+		$params[0]['before_widget'] = substr($params[0]['before_widget'], 0, -1). ' aria-label="' . esc_attr($name) . '">';
+		if ( strpos($params[0]['before_widget'], '<aside') === 0 &&
+			(strpos($id, 'nav') !== false || strpos($id, 'posts') !== false || strpos($id, 'categories') !== false || strpos($id, 'archive') !== false)) {
+			$params[0]['before_widget'] = '<nav ' . substr($params[0]['before_widget'], 6);
+			$params[0]['after_widget'] = '</nav>';
+		} else if (strpos($id, 'search') >= 0) {
+			$params[0]['before_widget'] = substr($params[0]['before_widget'], 0, -1). ' role="search">';
+		}
+		// var_dump($params);
+		return $params;
 	}
 
 	/**
