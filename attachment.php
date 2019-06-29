@@ -9,7 +9,7 @@
 get_header(); ?>
 
 <div id="content-area">
-	<div id="site-content" role="main"><?php
+	<main id="site-content"><?php
 
 if ( have_posts() ) {
 
@@ -83,7 +83,7 @@ if ( have_posts() ) {
 }
 ?>
 
-	</div><!-- #site-content -->
+	</main><!-- #site-content -->
 </div><!-- #content-area -->
 
 <?php get_footer(); ?>

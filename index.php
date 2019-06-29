@@ -9,7 +9,7 @@
 get_header(); ?>
 
 <div id="content-area">
-	<div id="site-content" role="main"><?php
+	<main id="site-content"><?php
 
 // If on search page, then display what we searched for
 if ( is_search() ) { ?>
@@ -52,7 +52,7 @@ if ( have_posts() ) {
 
 				// Display full content for home page and single post pages
 				if ( is_home() || is_singular() ) {
-					the_content( esc_html__( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
+					the_content( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
 					wp_link_pages( array( 'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'hellish-simplicity' ), 'after' => '</div>' ) );
 				} else {
 
@@ -89,7 +89,7 @@ else {
 }
 ?>
 
-	</div><!-- #site-content --><?php
+</main><!-- #site-content --><?php
 
 	// Show sidebar if not on full width template
 	if ( 'full-width.php' != basename( get_page_template() ) ) {

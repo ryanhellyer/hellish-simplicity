@@ -9,6 +9,7 @@ $border: 1px solid #ddd;
 $small-text: 0.8em;
 $red_colour: #d90000;
 $grey_colour: #ddd;
+$scondary_color: #333;
 $font_standard_size: 1.0em;
 $font_reduced_size: 0.9em;
 $font_small_size: 0.8em;
@@ -21,6 +22,41 @@ $font_serif: "Droid Serif", serif;
 	-webkit-border-radius: $radius;
 }
 
+/* =Screen reader only
+-------------------------------------------------------------- */
+//sr only code from bootstrap - https://github.com/twbs/bootstrap/blob/a4a04cd9ec741050390746f8056cc79a9c04c8df/scss/mixins/_screen-reader.scss
+//
+// The MIT License (MIT)
+//
+// Copyright (c) 2011-2019 Twitter, Inc.
+// Copyright (c) 2011-2019 The Bootstrap Authors
+@mixin sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@mixin sr-only-focusable {
+  &:not(:focus) {
+    @include sr-only();
+  }
+}
+
+.sr-only,
+.sr-only-focusable:not(:focus) {
+  @include sr-only();
+}
+/* #Accessiblity
+-------------------------------------------------------------- */
+div[tabindex="-1"] { //hide outline from forced tab elements
+	outline: none;
+}
 
 /* =Fonts
 -------------------------------------------------------------- */
@@ -32,7 +68,8 @@ $font_serif: "Droid Serif", serif;
 		url(../fonts/droidsans-webfont.ttf) format('truetype'),
 		url(../fonts/droidsans-webfont.svg#droid_sansregular) format('svg');
 	font-weight: normal;
-	font-style: normal;	
+	font-style: normal;
+	font-display: fallback;
 }
 @font-face {
 	font-family: 'Droid Serif';
@@ -43,6 +80,7 @@ $font_serif: "Droid Serif", serif;
 		url(../fonts/droidserif-webfont.svg#droid_serifregular) format('svg');
 	font-weight: normal;
 	font-style: normal;
+	font-display: fallback;
 }
 
 /* =Reset
@@ -51,7 +89,6 @@ body,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,a,img,dl,dt,dd,ol,ul,li,fieldset,form
 	margin: 0;
 	padding: 0;
 	border: 0;
-	outline: 0;
 	list-style: none;
 }
 body {
@@ -71,16 +108,11 @@ address {
 	display: block;
 }
 
-/* =Hidden sections
--------------------------------------------------------------- */
-.screen-reader-text {
-	display: none;
-}
-
 /* =Links
 -------------------------------------------------------------- */
 a {
 	text-decoration: none;
+	font-style: oblique;
 	color: $red_colour;
 }
 a:hover {
@@ -115,6 +147,7 @@ a:hover {
 		font-size: 2.8em;
 		line-height: 1.5em;
 		font-weight: bold;
+		font-display: swap;
 		letter-spacing: -0.05em;
 		text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 		margin: 0 0 0 2%;
@@ -143,7 +176,7 @@ a:hover {
 		float: right;
 		font-weight: normal;
 		margin: 1.5em 2% 0 2%;
-		color: #999;
+		color: $scondary_color;
 	}
 
 }
@@ -193,6 +226,7 @@ h2 {
 }
 
 .widget-title {
+	font-family: $font_serif;
 	font-size: 1.4em;
 	font-weight: bold;
 }
@@ -295,7 +329,7 @@ blockquote {
 
 blockquote,
 blockquote p {
-	color: #999;
+	color: $scondary_color;
 	font-style: italic;
 }
 
@@ -314,18 +348,11 @@ input[type=text] {
 }
 
 .search-form {
-
-	input[type=submit],
-	label {
-		display: none;
-	}
-
 	input[type=text] {
 		width: 90%;
 		max-width: 400px;
 		font-size: $font_reduced_size;
 	}
-
 }
 
 iframe {
@@ -404,7 +431,7 @@ article.last-post {
 }
 
 .entry-meta {
-	color: #888;
+	color: $scondary_color;
 	font-family: $font_sans_serif;
 	font-size: 0.8em;
 }
@@ -550,7 +577,7 @@ ol.commentlist {
 		padding: 0;
 		@include rounded_corners();
 		font-size: $font_reduced_size;
-		color: #999;
+		color: $scondary_color;
 	}
 
 	li.trackback ul,
@@ -697,7 +724,7 @@ input[type=submit]:hover {
 .comment-notes,
 .form-allowed-tags {
 	font-size: $font_standard_size;
-	color: #999;
+	color: $scondary_color;
 }
 
 /* =Third party plugins
