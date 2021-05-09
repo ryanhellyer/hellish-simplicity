@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The main template file.
  *
@@ -11,24 +12,24 @@ get_header(); ?>
 <div id="content-area">
 	<div id="site-content" role="main"><?php
 
-// If on search page, then display what we searched for
+// If on search page, then display what we searched for.
 if ( is_search() ) { ?>
 		<h1 class="page-title">
 			<?php printf( esc_html__( 'Search Results for: "%s" ...', 'hellish-simplicity' ), get_search_query() ); ?>
 		</h1><!-- .page-title --><?php
 }
 
-// Set heading tags
+// Set heading tags.
 if ( is_home() || is_search() ) {
 	$post_heading_tag = 'h2';
 } else {
 	$post_heading_tag = 'h1';
 }
 
-// Load main loop
+// Load main loop.
 if ( have_posts() ) {
 
-	// Start of the Loop
+	// Start of the Loop.
 	while ( have_posts() ) {
 		the_post();
 		?>
@@ -38,7 +39,7 @@ if ( have_posts() ) {
 			<header class="entry-header">
 				<<?php echo $post_heading_tag; // WPCS: XSS OK. ?> class="entry-title"><?php
 
-					// Don't display links on singular post titles
+					// Don't display links on singular post titles.
 					if ( is_singular() ) {
 						the_title();
 					} else {
@@ -50,13 +51,13 @@ if ( have_posts() ) {
 
 			<div class="entry-content"><?php
 
-				// Display full content for home page and single post pages
+				// Display full content for home page and single post pages.
 				if ( is_home() || is_singular() ) {
 					the_content( esc_html__( 'Continue reading <span class="meta-nav">&rarr;</span>', 'hellish-simplicity' ) );
 					wp_link_pages( array( 'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'hellish-simplicity' ), 'after' => '</div>' ) );
 				} else {
 
-					// Use the built in thumbnail system, otherwise attempt to display the latest attachment
+					// Use the built in thumbnail system, otherwise attempt to display the latest attachment.
 					if ( has_post_thumbnail() ) {
 						the_post_thumbnail( 'hellish-simplicity-excerpt-thumb' );
 					} elseif ( function_exists( 'get_the_image' ) ) {
@@ -67,14 +68,14 @@ if ( have_posts() ) {
 				?>
 			</div><!-- .entry-content --><?php
 
-			// Don't display meta information on static pages
+			// Don't display meta information on static pages.
 			if ( ! is_page() ) {
 				get_template_part( 'template-parts/footer-meta' );
 			} ?>
 
 		</article><!-- #post-<?php the_ID(); ?> --><?php
 
-		// If comments are open or we have at least one comment, load up the comment template
+		// If comments are open or we have at least one comment, load up the comment template.
 		if ( comments_open() || '0' != get_comments_number() ) {
 			comments_template( '', true );
 		}
@@ -91,7 +92,7 @@ else {
 
 	</div><!-- #site-content --><?php
 
-	// Show sidebar if not on full width template
+	// Show sidebar if not on full width template.
 	if ( 'full-width.php' != basename( get_page_template() ) ) {
 		get_template_part( 'template-parts/sidebar' );
 	}

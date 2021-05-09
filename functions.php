@@ -43,25 +43,25 @@ class Hellish_Simplicity_Setup {
 	 * Constructor.
 	 * Add methods to appropriate hooks and filters.
 	 *
-	 * @global  int  $content_width  Sets the media widths (unfortunately required as a global due to WordPress core requirements) 
+	 * @global  int  $content_width  Sets the media widths (unfortunately required as a global due to WordPress core requirements).
 	 */
 	public function __construct() {
 		global $content_width;
 		$content_width = 680;
 
-		// Add action hooks
-		add_action( 'admin_init',                                            array( $this, 'add_option' ) );
-		add_action( 'after_setup_theme',                                     array( $this, 'theme_setup' ) );
-		add_action( 'widgets_init',                                          array( $this, 'widgets_init' ) );
-		add_action( 'wp_enqueue_scripts',                                    array( $this, 'stylesheet' ) );
-		add_action( 'admin_init',                                            array( $this, 'editor_stylesheet' ) );
-		add_action( 'wp_enqueue_scripts',                                    array( $this, 'comment_reply' ) );
-		add_action( 'customize_register',                                    array( $this, 'customize_register' ) );
+		// Add action hooks.
+		add_action( 'admin_init', array( $this, 'add_option' ) );
+		add_action( 'after_setup_theme', array( $this, 'theme_setup' ) );
+		add_action( 'widgets_init', array( $this, 'widgets_init' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'stylesheet' ) );
+		add_action( 'admin_init', array( $this, 'editor_stylesheet' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'comment_reply' ) );
+		add_action( 'customize_register', array( $this, 'customize_register' ) );
 		add_action( 'customize_render_control_' . self::HEADER_TEXT_OPTION,  array( $this, 'customizer_help' ) );
-		add_action( 'admin_head',                                            array( $this, 'admin_menu_link' ) );
+		add_action( 'admin_head', array( $this, 'admin_menu_link' ) );
 
-		// Add filters
-		add_filter( 'post_class',                                            array( $this, 'add_last_post_class' ) );
+		// Add filters.
+		add_filter( 'post_class', array( $this, 'add_last_post_class' ) );
 	}
 
 	/**
@@ -69,8 +69,8 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function add_option() {
 		add_option(
-			self::HEADER_TEXT_OPTION, // The header text option
-			self::DEFAULT_HEADER_TEXT // The default header text
+			self::HEADER_TEXT_OPTION, // The header text option.
+			self::DEFAULT_HEADER_TEXT // The default header text.
 		);
 	}
 
@@ -79,16 +79,16 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function comment_reply() {
 
-		// Bail out now if in admin panel
+		// Bail out now if in admin panel.
 		if ( is_admin() ) {
 			return;
 		}
 
-		// HTML 5 shiv script
+		// HTML 5 shiv script.
 		wp_enqueue_script( self::THEME_NAME . '-html5-shiv', get_template_directory_uri() . '/js/html5-shiv.min.js', null, SELF::VERSION_NUMBER );
 		wp_script_add_data( self::THEME_NAME . '-html5-shiv', 'conditional', 'lt IE 9' );
 
-		// Comment reply script
+		// Comment reply script.
 		if ( is_singular() ) {
 			wp_enqueue_script( 'comment-reply' );
 		}
@@ -115,16 +115,16 @@ class Hellish_Simplicity_Setup {
 	 */
 	public function theme_setup() {
 
-		// Make theme available for translation
+		// Make theme available for translation.
 		load_theme_textdomain( 'hellish-simplicity', get_template_directory() . '/languages' );
 
-		// Add default posts and comments RSS feed links to head
+		// Add default posts and comments RSS feed links to head.
 		add_theme_support( 'automatic-feed-links' );
 
-		// Add title tags
+		// Add title tags.
 		add_theme_support( 'title-tag' );
 
-		// Enable support for Post Thumbnails
+		// Enable support for Post Thumbnails.
 		add_theme_support( 'post-thumbnails' );
 		add_image_size( self::THEME_NAME . '-excerpt-thumb', 250, 350 );
 		add_image_size( self::THEME_NAME . '-attachment-page', 1000, 1500 );
@@ -149,11 +149,11 @@ class Hellish_Simplicity_Setup {
 	/**
 	 * Implements Page Styler theme options into Theme Customizer.
 	 *
-	 * @param  object  $wp_customize  Theme Customizer object
+	 * @param object $wp_customize Theme Customizer object.
 	 */
 	public function customize_register( $wp_customize ) {
 
-		// Theme Footer
+		// Theme Footer.
 		$wp_customize->add_setting( self::HEADER_TEXT_OPTION, array(
 			'type'              => 'option',
 			'sanitize_callback' => array( $this, 'sanitize' ),
@@ -187,8 +187,8 @@ class Hellish_Simplicity_Setup {
 	 * Adds a class of .last-post to the last post in a loop.
 	 * This method is discussed here https://geek.hellyer.kiwi/tools/add-class-to-last-post-in-loop/
 	 * 
-	 * @param   array  $classes  The array of post classes
-	 * @return  array  The array of post classes, with .last-post added
+	 * @param array $classes The array of post classes.
+	 * @return array The array of post classes, with .last-post added.
 	 */
 	public function add_last_post_class( $classes ) {
 		global $wp_query;
@@ -205,12 +205,12 @@ class Hellish_Simplicity_Setup {
 	 * This is required because this theme does not use a graphical header image.
 	 * Standard graphical custom header images automatically add this.
 	 *
-	 * @global array $submenu
+	 * @global array $submenu.
 	 */
 	public function admin_menu_link() {
 		global $submenu;
 
-		// Only display header admin menu link when in admin panel and when user is allowed to edit theme options
+		// Only display header admin menu link when in admin panel and when user is allowed to edit theme options.
 		if ( ! is_admin() && ! current_user_can( 'edit_theme_options' ) ) {
 			return;
 		}
@@ -228,8 +228,8 @@ class Hellish_Simplicity_Setup {
 	/**
 	 * Sanitizing the header text.
 	 *
-	 * @param  string  $header_text  The header text
-	 * @return string  The sanitized header text
+	 * @param string $header_text  The header text.
+	 * @return string The sanitized header text.
 	 * @access static
 	 */
 	static public function sanitize( $header_text ) {

@@ -1,29 +1,19 @@
 <?php
 /**
- * Template for displaying Comments.
+ * The template for displaying comments
+ *
+ * This is the template that displays the area of the page that contains both the current comments
+ * and the comment form.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
  * @package Hellish Simplicity
- * @since Hellish Simplicity 1.1
  */
 
-
-/**
- * Show pre comments navigation.
- */
-function hellish_comments_navigation( $id = '' ) {
-	if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) {
-		?>
-	<nav role="navigation" id="<?php echo esc_attr( $id ); ?>" class="site-navigation comment-navigation">
-		<h1 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'hellish-simplicity' ); ?></h1>
-		<div class="nav-previous"><?php previous_comments_link( esc_html__( '&larr; Older Comments', 'hellish-simplicity' ) ); ?></div>
-		<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments &rarr;', 'hellish-simplicity' ) ); ?></div>
-	</nav><!-- #comment-nav-<?php echo absint( $id ); ?> .site-navigation .comment-navigation --><?php
-	}
-}
-
-
-/**
- * Bail out now if the user needs to enter a password.
+/*
+ * If the current post is protected by a password and
+ * the visitor has not yet entered the password we will
+ * return early without loading the comments.
  */
 if ( post_password_required() ) {
 	return;
@@ -32,55 +22,56 @@ if ( post_password_required() ) {
 
 <div id="comments" class="comments-area">
 
-<?php
+	<?php
+	// You can start editing here -- including this comment!
+	if ( have_comments() ) :
+		?>
+		<h2 class="comments-title">
+			<?php
+			$hellish_simplicity_comment_count = get_comments_number();
+			if ( '1' === $hellish_simplicity_comment_count ) {
+				printf(
+					/* translators: 1: title. */
+					esc_html__( 'One thought on &ldquo;%1$s&rdquo;', 'hellish-simplicity' ),
+					'<span>' . wp_kses_post( get_the_title() ) . '</span>'
+				);
+			} else {
+				printf( 
+					/* translators: 1: comment count number, 2: title. */
+					esc_html( _nx( '%1$s thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', $hellish_simplicity_comment_count, 'comments title', 'hellish-simplicity' ) ),
+					number_format_i18n( $hellish_simplicity_comment_count ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					'<span>' . wp_kses_post( get_the_title() ) . '</span>'
+				);
+			}
+			?>
+		</h2><!-- .comments-title -->
 
-/**
- * Display the comments if any exist.
- */
-if ( have_comments() ) { ?>
-	<h2 class="comments-title"><?php
-		printf(
-			_nx(
-				'One thought on &ldquo;%2$s&rdquo;',
-				'%1$s thoughts on &ldquo;%2$s&rdquo;',
-				get_comments_number(),
-				'comments title',
-				'hellish-simplicity'
-			),
-			number_format_i18n( get_comments_number() ),
-			'<span>' . esc_html( get_the_title() ) . '</span>'
-		);
-	?></h2><?php
+		<?php the_comments_navigation(); ?>
 
-	hellish_comments_navigation( 'comment-nav-above' );
+		<ol class="comment-list">
+			<?php
+			wp_list_comments(
+				array(
+					'style'      => 'ol',
+					'short_ping' => true,
+				)
+			);
+			?>
+		</ol><!-- .comment-list -->
+
+		<?php
+		the_comments_navigation();
+
+		// If comments are closed and there are comments, let's leave a little note, shall we?
+		if ( ! comments_open() ) :
+			?>
+			<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'hellish-simplicity' ); ?></p>
+			<?php
+		endif;
+
+	endif; // Check for have_comments().
+
+	comment_form();
 	?>
 
-	<ol class="commentlist"><?php wp_list_comments(); ?></ol><!-- .commentlist --><?php
-
-	hellish_comments_navigation( 'comment-nav-below' );
-
-}
-
-/**
- * If comments are closed, then leave a notice.
- */
-if (
-	! comments_open() &&
-	'0' != get_comments_number() &&
-	post_type_supports( get_post_type(), 'comments' )
-) {
-	echo '<p class="nocomments">' . esc_html__( 'Comments are closed.', 'hellish-simplicity' ) . '</p>';
-}
-
-/**
- * Display the main comment form.
- */
-comment_form(
-	array(
-		'comment_notes_after' => '',
-	)
-);
-
-?>
-
-</div><!-- #comments .comments-area -->
+</div><!-- #comments -->
