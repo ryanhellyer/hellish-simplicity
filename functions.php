@@ -16,7 +16,7 @@ class Hellish_Simplicity_Setup {
 	 * 
 	 * @var string
 	 */
-	const VERSION_NUMBER = '2.0.3';
+	const VERSION_NUMBER = '2.1';
 
 	/**
 	 * The default header text.

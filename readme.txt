@@ -10,6 +10,11 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == Changelog ==
 
+== Version 2.1 =
+March 9th 2020
+* Coding standards fixes.
+* Simplifying code.
+
 == Version 2.0.2 =
 October 16th 2016
 * HTML5 Shiv update
