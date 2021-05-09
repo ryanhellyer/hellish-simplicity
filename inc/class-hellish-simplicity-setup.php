@@ -54,6 +54,7 @@ class Hellish_Simplicity_Setup {
 		add_action( 'after_setup_theme', array( $this, 'theme_setup' ) );
 		add_action( 'widgets_init', array( $this, 'widgets_init' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'stylesheet' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 		add_action( 'admin_init', array( $this, 'editor_stylesheet' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'comment_reply' ) );
 		add_action( 'customize_register', array( $this, 'customize_register' ) );
@@ -103,6 +104,16 @@ class Hellish_Simplicity_Setup {
 	public function stylesheet() {
 		if ( ! is_admin() ) {
 			wp_enqueue_style( self::THEME_NAME, get_stylesheet_directory_uri() . '/css/style.min.css', array(), self::VERSION_NUMBER );
+		}
+	}
+
+	/**
+	 * Load scripts.
+	 */
+	public function scripts() {
+		if ( ! is_admin() ) {
+			wp_enqueue_script( 'mustaches', get_template_directory_uri() . '/js/mustaches.min.js', array(), self::VERSION_NUMBER, true );
+			wp_enqueue_script( 'fusejs', get_template_directory_uri() . '/js/fuse.min.js', array(), self::VERSION_NUMBER, true );
 		}
 	}
 
