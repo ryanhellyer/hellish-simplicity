@@ -22,7 +22,6 @@ class Hellish_Simplicity_Index {
 		}
 	}
 
-
 	/**
 	 * Grabs list of all posts.
 	 *

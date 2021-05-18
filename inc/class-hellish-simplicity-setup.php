@@ -115,6 +115,7 @@ class Hellish_Simplicity_Setup {
 			wp_enqueue_script( 'mustaches', get_template_directory_uri() . '/js/mustaches.min.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'fusejs', get_template_directory_uri() . '/js/fuse.min.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'hellish-simplicity', get_template_directory_uri() . '/js/hellish-simplicity.js', array(), self::VERSION_NUMBER, true );
+			wp_add_inline_script( 'hellish-simplicity', "let home_url = '" . esc_url( home_url() ) . "';" );
 		}
 	}
 
