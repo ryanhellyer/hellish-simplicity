@@ -57,16 +57,23 @@ class Hellish_Simplicity_Index {
 
 		$index = array();
 		foreach ( $posts as $key => $post ) {
+
+			$term_ids = array();
+			foreach ( (array) $post->term_ids as $key => $term_id ) {
+				$term_ids[] = absint( $term_id );
+			}
+
 			$index[] = array(
 				'id'                 => absint( $post->ID ),
+				'path'               => esc_html( str_replace( home_url(), '', get_permalink( $post ) ) ),
 				'author_id'          => absint( $post->post_author ),
 				'timestamp'          => strtotime( $post->post_date_gmt ),
 				'content'            => wp_kses_post( $post->post_content ),
-				'post_title'         => esc_html( $post->post_title ),
+				'title'              => esc_html( $post->post_title ),
 				'excerpt'            => wp_kses_post( $post->post_excerpt ),
 				'slug'               => esc_attr( $post->post_name ),
 				'modified_timestamp' => strtotime( $post->post_modified_gmt ),
-				'term_ids'           => (array) $post->term_ids,
+				'term_ids'           => $term_ids,
 			);
 		}
 
