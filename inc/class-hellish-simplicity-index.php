@@ -67,18 +67,39 @@ class Hellish_Simplicity_Index {
 				'path'               => esc_html( str_replace( home_url(), '', get_permalink( $post ) ) ),
 				'author_id'          => absint( $post->post_author ),
 				'timestamp'          => strtotime( $post->post_date_gmt ),
-				'content'            => wp_kses_post( $post->post_content ),
+				'content'            => apply_filters( 'the_content', wp_kses_post( $post->post_content ) ),
 				'title'              => esc_html( $post->post_title ),
-				'excerpt'            => wp_kses_post( $post->post_excerpt ),
+				'excerpt'            => apply_filters( 'the_content', wp_kses_post( $this->get_the_excerpt( $post ) ) ),
 				'slug'               => esc_attr( $post->post_name ),
 				'modified_timestamp' => strtotime( $post->post_modified_gmt ),
 				'term_ids'           => $term_ids,
 			);
 		}
 
-
 		echo json_encode( $index );
 		die;
+	}
+
+	/**
+	 * Return the post excerpt, if one is set, else generate it using the
+	 * post content. If original text exceeds $num_of_words, the text is
+	 * trimmed and an ellipsis (…) is added to the end.
+	 *
+	 * Based on https://gist.github.com/kellenmace/6209d5f1e465cdcc800e690b472f8f16.
+	 *
+	 * @param object $post The WordPress post object.
+	 * @return string The generated excerpt.
+	 */
+	private function get_the_excerpt( $post ) {
+		$text = get_the_excerpt( $post );
+
+		if ( ! $text ) {
+			$text = $post->post_content;
+		}
+
+		$generated_excerpt = wp_trim_words( $text, 55 );
+
+		return apply_filters( 'get_the_excerpt', $generated_excerpt, $post );
 	}
 
 }

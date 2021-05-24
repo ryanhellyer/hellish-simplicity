@@ -14,8 +14,10 @@ get_header(); ?>
 
 // If on search page, then display what we searched for.
 if ( is_search() ) { ?>
+
 		<h1 class="page-title">
 			<?php printf( esc_html__( 'Search Results for: "%s" ...', 'hellish-simplicity' ), get_search_query() ); ?>
+
 		</h1><!-- .page-title --><?php
 }
 

@@ -111,6 +111,7 @@ class Hellish_Simplicity_Setup {
 	 * Load scripts.
 	 */
 	public function scripts() {
+
 		if ( ! is_admin() ) {
 			wp_enqueue_script( 'mustaches', get_template_directory_uri() . '/js/mustaches.min.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'fusejs', get_template_directory_uri() . '/js/fuse.min.js', array(), self::VERSION_NUMBER, true );
