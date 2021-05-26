@@ -41,7 +41,6 @@ class Hellish_Simplicity_Index {
 				);
 			}
 		}
-		$authors = json_encode( $authors );
 
 		$index = array(
 			'home_url'       => esc_url( home_url() ),
@@ -91,9 +90,16 @@ class Hellish_Simplicity_Index {
 		$post_index = array();
 		foreach ( $posts as $key => $post ) {
 
+			// Collect the term IDs.
 			$term_ids = array();
 			foreach ( (array) $post->term_ids as $key => $term_id ) {
 				$term_ids[] = absint( $term_id );
+			}
+
+			// Work out if sticky or not.
+			$sticky = false;
+			if ( is_sticky( $post->ID ) ) {
+				$sticky = true;
 			}
 
 			$post_index[] = array(
@@ -108,6 +114,7 @@ class Hellish_Simplicity_Index {
 				'modified_timestamp' => strtotime( $post->post_modified_gmt ),
 				'term_ids'           => $term_ids,
 				'post_type'          => esc_html( $post->post_type ),
+				'sticky'             => $sticky,
 			);
 
 		}

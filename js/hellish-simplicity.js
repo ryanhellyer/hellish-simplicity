@@ -11,7 +11,7 @@ NEED TO HIDE MONTH AND DAY ARCHIVES.
 window.onload=function() {
 	let fuse;
 	let index;
-	let single_template = `
+	let excerpt_template = `
 	<article id="post-{{id}}" class="post-{{id}} post type-post status-publish format-standard hentry">
 		<header class="entry-header">
 			<h2 class="entry-title">
@@ -26,6 +26,40 @@ window.onload=function() {
 		<footer class="entry-meta">
 			Posted on <a href="{{path}}" title="{{date}}" rel="bookmark"><time class="entry-date updated" datetime="{{date}}">{{date}}</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="/author/{{author_id}}/" title="View all posts by {{author_id}}" rel="author">{{author.display_name}}</a></span></span>
 			<span class="sep"> | </span>
+			<span class="comments-link"><a href="{{path}}#respond">Leave a comment</a></span>
+		</footer><!-- .entry-meta -->
+	</article><!-- #post-{{id}} -->`;
+	let single_template = `
+	<article id="post-{{id}}" class="post-{{id}} post type-post status-publish format-standard hentry">
+		<header class="entry-header">
+			<h2 class="entry-title">
+				<a href="{{path}}" title="Permalink to {{title}}" rel="bookmark">
+					{{title}}
+				</a>
+			</h2><!-- .entry-title -->
+		</header><!-- .entry-header -->
+		<div class="entry-content">
+			{{{content}}}
+		</div><!-- .entry-content -->
+		<footer class="entry-meta">
+			Posted on <a href="{{path}}" title="{{date}}" rel="bookmark"><time class="entry-date updated" datetime="{{date}}">{{date}}</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="/author/{{author_id}}/" title="View all posts by {{author_id}}" rel="author">{{author.display_name}}</a></span></span>
+			<span class="sep"> | </span>
+			<span class="comments-link"><a href="{{path}}#respond">Leave a comment</a></span>
+		</footer><!-- .entry-meta -->
+	</article><!-- #post-{{id}} -->`;
+	let page_template = `
+	<article id="post-{{id}}" class="post-{{id}} post type-post status-publish format-standard hentry">
+		<header class="entry-header">
+			<h2 class="entry-title">
+				<a href="{{path}}" title="Permalink to {{title}}" rel="bookmark">
+					{{title}}
+				</a>
+			</h2><!-- .entry-title -->
+		</header><!-- .entry-header -->
+		<div class="entry-content">
+			{{{content}}}
+		</div><!-- .entry-content -->
+		<footer class="entry-meta">
 			<span class="comments-link"><a href="{{path}}#respond">Leave a comment</a></span>
 		</footer><!-- .entry-meta -->
 	</article><!-- #post-{{id}} -->`;
@@ -86,7 +120,7 @@ window.onload=function() {
 			let posts_index = index.posts;
 			let results     = posts_index.filter(post => post.path == path )
 
-			show_results( '{{content}}', content, results );
+			show_results( '{{main_content}}', content, results, single_template );
 
 			window.history.pushState( "object or string", results[0].title, raw_path );
 
@@ -124,33 +158,39 @@ window.onload=function() {
 	/**
 	 * Display results on the page.
 	 */
-	function show_results( page_template, content, results ) {
+	function show_results( wrapper_template, content, results, template ) {
 
 		let page_content = '';
 		for ( let i = 0; i < results.length; i++ ) {
 			let result = [];
 
-			result.id      = results[i]['id'];
-			result.slug    = results[i]['slug'];
-			result.path    = results[i]['path'];
-			result.title   = results[i]['title'];
-			result.excerpt = results[i]['excerpt'];
-
-			result.date    = date( index.date_format, results[i]['timestamp'] );
-			result.modified_date    = results[i]['modified_timestamp'];
-			result.term_ids    = results[i]['term_ids'];
+			result.id            = results[ i ]['id'];
+			result.slug          = results[ i ]['slug'];
+			result.path          = results[ i ]['path'];
+			result.title         = results[ i ]['title'];
+			result.excerpt       = results[ i ]['excerpt'];
+			result.content       = results[ i ]['content'];
+			result.date          = date( index.date_format, results[ i ]['timestamp'] );
+			result.modified_date = results[ i ]['modified_timestamp'];
+			result.term_ids      = results[ i ]['term_ids'];
 
 			// Authors.
-			let author_id              = results[i]['author_id'];
+			let author_id              = results[ i ]['author_id'];
 			result.author_id           = author_id;
 			authors_list               = JSON.parse( index.authors );
 			result.author              = authors_list[ author_id ];
 			result.author.display_name = result.author.display_name;
 
-			page_content = page_content + Mustache.render( single_template, result );
+			if ( 'page' === results[ i ].post_type ) {
+//				let template = single_template;
+			} else {
+//				if ( 'page' === results[ i ].post_type ) {
+			}
+
+			page_content = page_content + Mustache.render( template, result );
 		}
 
-		let rendered_content = page_template.replace( '{{content}}', page_content );
+		let rendered_content = wrapper_template.replace( '{{main_content}}', page_content );
 		content.innerHTML    = rendered_content;
 	}
 
@@ -194,7 +234,7 @@ window.onload=function() {
 
 		let results = [];
 		for ( let i = 0; i < fuse_results.length; i++ ) {
-			results[i] = fuse_results[i]['item'];
+			results[ i ] = fuse_results[ i ]['item'];
 		}
 
 		search_template  = `
@@ -202,9 +242,9 @@ window.onload=function() {
 			Search Results for: &quot;` + get_search_param() + `&quot; ...
 		</h1><!-- .page-title -->
 
-		{{content}}`;
+		{{main_content}}`;
 
-		show_results( search_template, content, results );
+		show_results( search_template, content, results, excerpt_template );
 	}
 
 	/**
@@ -216,20 +256,23 @@ window.onload=function() {
 
 		for ( let i = 0; i < index.posts.length; i++ ) {
 
-			if (
-				'post' === index.posts[i].post_type
-				&&
-				key < index.posts_per_page
-			) {
-				results[key] = index.posts[i];
+			// If not on a 'post', then ignore it.
+			if ( 'post' !== index.posts[ i ].post_type ) {
+				continue;
+			}
+
+			// If sticky put on front.
+			if ( true === index.posts[ i ].sticky ) {
+				results.unshift( index.posts[ i ] );
+				key++;
+			} else if ( key < index.posts_per_page ) {
+				results[ key ] = index.posts[ i ];
 				key++;
 			}
 
 		}
-console.log(results);
-		template  = '{{content}}';
 
-		show_results( template, content, results );
+		show_results( '{{main_content}}', content, results, excerpt_template );
 	}
 
 }
