@@ -37,7 +37,5 @@
 				<span class="comments-link"><?php comments_popup_link( esc_html__( 'Leave a comment', 'hellish-simplicity' ), esc_html__( '1 Comment', 'hellish-simplicity' ), esc_html__( '% Comments', 'hellish-simplicity' ) ); ?></span><?php
 				}
 
-				// Edit link
-				edit_post_link( esc_html__( 'Edit', 'hellish-simplicity' ), '<span class="sep"> | </span><span class="edit-link">', '</span>' );
 				?>
 			</footer><!-- .entry-meta --><?php

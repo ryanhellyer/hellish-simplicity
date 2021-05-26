@@ -1,5 +1,7 @@
 /**
 
+perhaps this code should be compiled into one big JS file generated via PHP to keep things like taxonomies etc. in here.
+
 NEED TO INDEX POSTS IN EACH YEAR DATE ARCHIVE.
 NEED TO INDEX ALL TAXONOMY PAGINATION PAGES.
 NEED TO HIDE MONTH AND DAY ARCHIVES.
@@ -22,7 +24,7 @@ window.onload=function() {
 			{{{excerpt}}}
 		</div><!-- .entry-content -->
 		<footer class="entry-meta">
-			Posted on <a href="{{path}}" title="{{timestamp}}" rel="bookmark"><time class="entry-date updated" datetime="{{timestamp}}">{{timestamp}}</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="/author/{{author_id}}/" title="View all posts by {{author_id}}" rel="author">ryan</a></span></span>
+			Posted on <a href="{{path}}" title="{{date}}" rel="bookmark"><time class="entry-date updated" datetime="{{date}}">{{date}}</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="/author/{{author_id}}/" title="View all posts by {{author_id}}" rel="author">{{author.display_name}}</a></span></span>
 			<span class="sep"> | </span>
 			<span class="comments-link"><a href="{{path}}#respond">Leave a comment</a></span>
 		</footer><!-- .entry-meta -->
@@ -88,9 +90,22 @@ window.onload=function() {
 			let result = [];
 
 			result.id      = results[i]['id'];
+			result.slug    = results[i]['slug'];
 			result.path    = results[i]['path'];
 			result.title   = results[i]['title'];
 			result.excerpt = results[i]['excerpt'];
+
+//let date_format = 'F j, Y'; // ***** this should be inserted from WordPress.
+			result.date    = date( date_format, results[i]['timestamp'] );
+			result.modified_date    = results[i]['modified_timestamp'];
+			result.term_ids    = results[i]['term_ids'];
+
+			// Authors.
+			let author_id              = results[i]['author_id'];
+			result.author_id           = author_id;
+			authors_list               = JSON.parse( authors );
+			result.author              = authors_list[ author_id ];
+			result.author.display_name = result.author.display_name;
 
 			page_content = page_content + Mustache.render( single_template, result );
 		}

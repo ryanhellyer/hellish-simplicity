@@ -102,6 +102,7 @@ class Hellish_Simplicity_Setup {
 	 * Load stylesheet.
 	 */
 	public function stylesheet() {
+
 		if ( ! is_admin() ) {
 			wp_enqueue_style( self::THEME_NAME, get_stylesheet_directory_uri() . '/css/style.min.css', array(), self::VERSION_NUMBER );
 		}
@@ -113,11 +114,44 @@ class Hellish_Simplicity_Setup {
 	public function scripts() {
 
 		if ( ! is_admin() ) {
+			wp_enqueue_script( 'php-date', get_template_directory_uri() . '/js/php-date.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'mustaches', get_template_directory_uri() . '/js/mustaches.min.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'fusejs', get_template_directory_uri() . '/js/fuse.min.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'hellish-simplicity', get_template_directory_uri() . '/js/hellish-simplicity.js', array(), self::VERSION_NUMBER, true );
-			wp_add_inline_script( 'hellish-simplicity', "let home_url = '" . esc_url( home_url() ) . "';" );
+			wp_add_inline_script( 'hellish-simplicity', $this->inline_scripts() );
 		}
+	}
+
+	/**
+	 * Display inline scripts.
+	 */
+	public function inline_scripts() {
+		$js = '';
+
+		// Home URL.
+		$js .= "let home_url = '" . esc_url( home_url() ) . "';\n";
+
+		// List the authors.
+// may be worth caching this section.
+		$users = get_users();
+		foreach( $users as $key => $user ) {
+			$user_id = absint( $user->data->ID );
+
+			if ( 0 < count_user_posts( $user_id ) ) {
+				$authors[ $user_id ] = array(
+					'display_name' => esc_html( $user->data->display_name ),
+					'url'          => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
+				);
+			}
+		}
+		if ( isset( $authors ) ) {
+			$js .= "let authors = '" . json_encode( $authors ) . "';";
+		}
+
+		// Date format.
+		$js .= "let date_format = '" . get_option( 'date_format' ) . "';";
+
+		return $js;
 	}
 
 	/**
