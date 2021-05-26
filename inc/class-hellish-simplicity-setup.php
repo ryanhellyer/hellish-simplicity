@@ -132,17 +132,21 @@ class Hellish_Simplicity_Setup {
 		$js .= "let home_url = '" . esc_url( home_url() ) . "';\n";
 
 		// List the authors.
-// may be worth caching this section.
-		$users = get_users();
-		foreach( $users as $key => $user ) {
-			$user_id = absint( $user->data->ID );
+		$key = 'hellish-simplicity-authors';
+		if ( false === ( $authors = get_transient( $key ) ) ) {
+			$users = get_users();
+			foreach( $users as $key => $user ) {
+				$user_id = absint( $user->data->ID );
 
-			if ( 0 < count_user_posts( $user_id ) ) {
-				$authors[ $user_id ] = array(
-					'display_name' => esc_html( $user->data->display_name ),
-					'url'          => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
-				);
+				if ( 0 < count_user_posts( $user_id ) ) {
+					$authors[ $user_id ] = array(
+						'display_name' => esc_html( $user->data->display_name ),
+						'url'          => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
+					);
+				}
 			}
+
+			set_transient( $key, $authors, 1 * MINUTE_IN_SECONDS );
 		}
 		if ( isset( $authors ) ) {
 			$js .= "let authors = '" . json_encode( $authors ) . "';";

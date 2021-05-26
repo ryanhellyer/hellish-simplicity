@@ -33,6 +33,28 @@ window.onload=function() {
 
 	get_posts();
 
+	/**
+	 * Handle keypress events.
+	 */
+	document.getElementById( 's' ).addEventListener(
+		'keyup',
+		function( e ) {
+
+			// Bail out if no value set.
+			if ( null === e.target.value ) {
+				return;
+			}
+
+			let search_string = e.target.value;
+
+			window.history.pushState( "object or string", 'Search Results for "' + search_string + '"', home_url + '/?s=' + search_string );
+			search();
+		}
+	);
+
+	/**
+	 * Handle click events.
+	 */
 	window.addEventListener(
 		'click',
 		function( e ) {
@@ -41,13 +63,14 @@ window.onload=function() {
 				return;
 			}
 
-			let path = e.target.href.replace( home_url, '' );
+			let raw_path = e.target.href.replace( home_url, '' );
+			path         = raw_path.split( '#' )[0]; // Strip anchor links.
 
 			let results = list.filter(post => post.path == path )
 
 			show_results( '{{content}}', content, results );
 
-			window.history.pushState( "object or string", results[0].title, results[0].path );
+			window.history.pushState( "object or string", results[0].title, raw_path );
 
 			e.preventDefault();
 		}
@@ -95,7 +118,6 @@ window.onload=function() {
 			result.title   = results[i]['title'];
 			result.excerpt = results[i]['excerpt'];
 
-//let date_format = 'F j, Y'; // ***** this should be inserted from WordPress.
 			result.date    = date( date_format, results[i]['timestamp'] );
 			result.modified_date    = results[i]['modified_timestamp'];
 			result.term_ids    = results[i]['term_ids'];
