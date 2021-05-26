@@ -10,7 +10,7 @@ NEED TO HIDE MONTH AND DAY ARCHIVES.
 
 window.onload=function() {
 	let fuse;
-	let list;
+	let index;
 	let single_template = `
 	<article id="post-{{id}}" class="post-{{id}} post type-post status-publish format-standard hentry">
 		<header class="entry-header">
@@ -31,7 +31,7 @@ window.onload=function() {
 	</article><!-- #post-{{id}} -->`;
 	let content = document.getElementById( 'site-content' );
 
-	get_posts();
+	get_index();
 
 	/**
 	 * Add class to body tag (to allow us to style site based on JS being on or not.
@@ -53,7 +53,7 @@ window.onload=function() {
 
 			// If value is blank, then load home page.
 			if ( '' === e.target.value ) {
-				window.history.pushState( "object or string", home_title, home_url );
+				window.history.pushState( "object or string", index.home_title, index.home_url );
 //				home_page();
 				return;
 			}
@@ -64,7 +64,7 @@ window.onload=function() {
 				return;
 			}
 
-			window.history.pushState( "object or string", 'Search Results for "' + search_string + '"', home_url + '/?s=' + search_string );
+			window.history.pushState( "object or string", 'Search Results for "' + search_string + '"', index.home_url + '/?s=' + search_string );
 			search();
 		}
 	);
@@ -80,10 +80,11 @@ window.onload=function() {
 				return;
 			}
 
-			let raw_path = e.target.href.replace( home_url, '' );
+			let raw_path = e.target.href.replace( index.home_url, '' );
 			path         = raw_path.split( '#' )[0]; // Strip anchor links.
 
-			let results = list.filter(post => post.path == path )
+			let posts_index = index.posts;
+			let results     = posts_index.filter(post => post.path == path )
 
 			show_results( '{{content}}', content, results );
 
@@ -94,9 +95,9 @@ window.onload=function() {
 	);
 
 	/**
-	 * Run search query.
+	 * Get the index.
 	 */
-	function get_posts() {
+	function get_index() {
 
 		var request = new XMLHttpRequest();
 		request.open(
@@ -107,7 +108,7 @@ window.onload=function() {
 		request.setRequestHeader( 'Content-type', 'application/json' );
 		request.onreadystatechange = function() {
 			if ( request.readyState == 4 && request.status == 200 ) {
-				list = JSON.parse( request.responseText );
+				index = JSON.parse( request.responseText );
 
 				// If on search page, then run search.
 				if ( null !== get_search_param() ) {
@@ -135,14 +136,14 @@ window.onload=function() {
 			result.title   = results[i]['title'];
 			result.excerpt = results[i]['excerpt'];
 
-			result.date    = date( date_format, results[i]['timestamp'] );
+			result.date    = date( index.date_format, results[i]['timestamp'] );
 			result.modified_date    = results[i]['modified_timestamp'];
 			result.term_ids    = results[i]['term_ids'];
 
 			// Authors.
 			let author_id              = results[i]['author_id'];
 			result.author_id           = author_id;
-			authors_list               = JSON.parse( authors );
+			authors_list               = JSON.parse( index.authors );
 			result.author              = authors_list[ author_id ];
 			result.author.display_name = result.author.display_name;
 
@@ -186,7 +187,7 @@ window.onload=function() {
 			]
 		};
 
-		fuse = new Fuse( list, options );
+		fuse = new Fuse( index.posts, options );
 
 		// Get results.
 		let fuse_results = fuse.search( get_search_param() );

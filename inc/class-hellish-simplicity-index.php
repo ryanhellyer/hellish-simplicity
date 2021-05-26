@@ -18,8 +18,41 @@ class Hellish_Simplicity_Index {
 	public function __construct() {
 
 		if ( '/hellish-simplicity-index/' === $_SERVER['REQUEST_URI'] ) {
-			$this->index_posts();
+			$this->create_index();
 		}
+	}
+
+	/**
+	 * Grabs list of all posts.
+	 *
+	 * @param bool $search Whether to return search data or not.
+	 * @global object $wpdb The WordPress database object.
+	 */
+	public function create_index() {
+
+		$users = get_users();
+		foreach( $users as $key => $user ) {
+			$user_id = absint( $user->data->ID );
+
+			if ( 0 < count_user_posts( $user_id ) ) {
+				$authors[ $user_id ] = array(
+					'display_name' => esc_html( $user->data->display_name ),
+					'url'          => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
+				);
+			}
+		}
+		$authors = json_encode( $authors );
+
+		$index = array(
+			'home_url'    => esc_url( home_url() ),
+			'posts'       => $this->index_posts(),
+			'authors'     => json_encode( $authors ),
+			'date_format' => esc_html( get_option( 'date_format' ) ),
+			'home_title'  => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
+		);
+
+		echo json_encode( $index );
+		die;
 	}
 
 	/**
@@ -54,7 +87,7 @@ class Hellish_Simplicity_Index {
 
 		$posts = $wpdb->get_results( $query );
 
-		$index = array();
+		$post_index = array();
 		foreach ( $posts as $key => $post ) {
 
 			$term_ids = array();
@@ -62,7 +95,7 @@ class Hellish_Simplicity_Index {
 				$term_ids[] = absint( $term_id );
 			}
 
-			$index[] = array(
+			$post_index[] = array(
 				'id'                 => absint( $post->ID ),
 				'path'               => esc_html( str_replace( home_url(), '', get_permalink( $post ) ) ),
 				'author_id'          => absint( $post->post_author ),
@@ -76,8 +109,7 @@ class Hellish_Simplicity_Index {
 			);
 		}
 
-		echo json_encode( $index );
-		die;
+		return $post_index;
 	}
 
 	/**
