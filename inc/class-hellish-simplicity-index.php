@@ -108,7 +108,7 @@ class Hellish_Simplicity_Index {
 				'author_id'          => absint( $post->post_author ),
 				'timestamp'          => strtotime( $post->post_date_gmt ),
 				'content'            => apply_filters( 'the_content', wp_kses_post( $post->post_content ) ),
-				'title'              => esc_html( $post->post_title ),
+				'title'              => wp_kses_post( $post->post_title ),
 				'excerpt'            => apply_filters( 'the_content', wp_kses_post( $this->get_the_excerpt( $post ) ) ),
 				'slug'               => esc_attr( $post->post_name ),
 				'modified_timestamp' => strtotime( $post->post_modified_gmt ),
