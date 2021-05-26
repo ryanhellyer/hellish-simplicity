@@ -54,7 +54,7 @@ window.onload=function() {
 			// If value is blank, then load home page.
 			if ( '' === e.target.value ) {
 				window.history.pushState( "object or string", index.home_title, index.home_url );
-//				home_page();
+				show_posts_page();
 				return;
 			}
 
@@ -65,7 +65,7 @@ window.onload=function() {
 			}
 
 			window.history.pushState( "object or string", 'Search Results for "' + search_string + '"', index.home_url + '/?s=' + search_string );
-			search();
+			show_search_page();
 		}
 	);
 
@@ -112,7 +112,7 @@ window.onload=function() {
 
 				// If on search page, then run search.
 				if ( null !== get_search_param() ) {
-					search();
+					show_search_page();
 				}
 
 			}
@@ -163,9 +163,9 @@ window.onload=function() {
 	}
 
 	/**
-	 * Run a search query.
+	 * Show the search page and run query.
 	 */
-	function search() {
+	function show_search_page() {
 
 		const options = {
 			// isCaseSensitive: false,
@@ -205,6 +205,31 @@ window.onload=function() {
 		{{content}}`;
 
 		show_results( search_template, content, results );
+	}
+
+	/**
+	 * Display the posts page.
+	 */
+	function show_posts_page() {
+		let results = [];
+		let key     = 0;
+
+		for ( let i = 0; i < index.posts.length; i++ ) {
+
+			if (
+				'post' === index.posts[i].post_type
+				&&
+				key < index.posts_per_page
+			) {
+				results[key] = index.posts[i];
+				key++;
+			}
+
+		}
+console.log(results);
+		template  = '{{content}}';
+
+		show_results( template, content, results );
 	}
 
 }

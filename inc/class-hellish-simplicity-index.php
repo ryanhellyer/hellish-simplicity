@@ -44,11 +44,12 @@ class Hellish_Simplicity_Index {
 		$authors = json_encode( $authors );
 
 		$index = array(
-			'home_url'    => esc_url( home_url() ),
-			'posts'       => $this->index_posts(),
-			'authors'     => json_encode( $authors ),
-			'date_format' => esc_html( get_option( 'date_format' ) ),
-			'home_title'  => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
+			'home_url'       => esc_url( home_url() ),
+			'posts'          => $this->index_posts(),
+			'authors'        => json_encode( $authors ),
+			'date_format'    => esc_html( get_option( 'date_format' ) ),
+			'home_title'     => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
+			'posts_per_page' => absint( get_option( 'posts_per_page' ) ),
 		);
 
 		echo json_encode( $index );
@@ -106,8 +107,18 @@ class Hellish_Simplicity_Index {
 				'slug'               => esc_attr( $post->post_name ),
 				'modified_timestamp' => strtotime( $post->post_modified_gmt ),
 				'term_ids'           => $term_ids,
+				'post_type'          => esc_html( $post->post_type ),
 			);
+
 		}
+
+		// Put posts in order of timestamp.
+		usort(
+			$post_index,
+			function( $a, $b ) {
+				return $b['timestamp'] <=> $a['timestamp'];
+			}
+		);
 
 		return $post_index;
 	}
