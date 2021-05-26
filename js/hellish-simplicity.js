@@ -34,18 +34,35 @@ window.onload=function() {
 	get_posts();
 
 	/**
-	 * Handle keypress events.
+	 * Add class to body tag (to allow us to style site based on JS being on or not.
+	 */
+	let body = document.body;
+	body.classList.add( 'js' );
+
+	/**
+	 * Run search queries as typed into search box.
 	 */
 	document.getElementById( 's' ).addEventListener(
 		'keyup',
 		function( e ) {
 
-			// Bail out if no value set.
+			// If no value set, then bail out.
 			if ( null === e.target.value ) {
 				return;
 			}
 
+			// If value is blank, then load home page.
+			if ( '' === e.target.value ) {
+				window.history.pushState( "object or string", home_title, home_url );
+//				home_page();
+				return;
+			}
+
 			let search_string = e.target.value;
+
+			if ( '' === search_string ) {
+				return;
+			}
 
 			window.history.pushState( "object or string", 'Search Results for "' + search_string + '"', home_url + '/?s=' + search_string );
 			search();

@@ -62,7 +62,7 @@ class Hellish_Simplicity_Setup {
 		add_action( 'admin_head', array( $this, 'admin_menu_link' ) );
 
 		// Add filters.
-		add_filter( 'post_class', array( $this, 'add_last_post_class' ) );
+		add_filter( 'get_search_form', array( $this, 'search_form' ) );
 	}
 
 	/**
@@ -149,11 +149,13 @@ class Hellish_Simplicity_Setup {
 			set_transient( $key, $authors, 1 * MINUTE_IN_SECONDS );
 		}
 		if ( isset( $authors ) ) {
-			$js .= "let authors = '" . json_encode( $authors ) . "';";
+			$js .= "let authors = '" . json_encode( $authors ) . "';\n";
 		}
 
 		// Date format.
-		$js .= "let date_format = '" . get_option( 'date_format' ) . "';";
+		$js .= "let date_format = '" . esc_html( get_option( 'date_format' ) ) . "';\n";
+
+		$js .= "let home_title = '" . esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ) . "';\n";
 
 		return $js;
 	}
@@ -232,20 +234,18 @@ class Hellish_Simplicity_Setup {
 	}
 
 	/**
-	 * Adds a class of .last-post to the last post in a loop.
-	 * This method is discussed here https://geek.hellyer.kiwi/tools/add-class-to-last-post-in-loop/
+	 * Adding a search form to the post
 	 * 
-	 * @param array $classes The array of post classes.
-	 * @return array The array of post classes, with .last-post added.
+	 * @param string $html The search form HTML.
+	 * @return string The modified search form HTML.
 	 */
-	public function add_last_post_class( $classes ) {
-		global $wp_query;
+	public function search_form( $html ) {
+		$before = '<input type="text" value="" name="s" id="s" />';
+		$after  = '<input type="text" value="" name="s" id="s" placeholder="' . esc_attr__( 'Search ...', 'hellish-simplicity' ) . '" />';
 
-		if ($wp_query->current_post == ( $wp_query->post_count - 1 ) ) {
-			$classes[] = 'last-post';
-		}
+		$html = str_replace( $before, $after, $html );
 
-		return $classes;
+		return $html;
 	}
 
 	/**

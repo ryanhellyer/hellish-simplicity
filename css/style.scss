@@ -328,6 +328,10 @@ input[type=text] {
 
 }
 
+.js #searchsubmit {
+	display: none; /* Submit is not required when JS is on because we search live */
+}
+
 iframe {
 	max-width: 100%;
 	padding: 0;
@@ -387,7 +391,7 @@ article {
 	border-bottom: $border;
 }
 
-article.last-post {
+article:last-of-type {
 	border-bottom: none;
 }
 
