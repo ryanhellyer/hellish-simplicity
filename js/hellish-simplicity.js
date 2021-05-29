@@ -99,7 +99,7 @@ window.onload=function() {
 				return;
 			}
 
-			window.history.pushState( "object or string", 'Search Results for "' + search_string + '"', index.home_url + '/?s=' + search_string );
+			window.history.pushState( 'object or string', 'Search Results for "' + search_string + '"', index.home_url + '/?s=' + search_string );
 			show_search_page();
 		}
 	);
@@ -135,13 +135,18 @@ window.onload=function() {
 				return;
 			}
 
+if ( '/' + index.pagination_page_text + '/8/' === path ) {
+	show_posts_page();
+	e.preventDefault();
+	return;
+}
 
 			let posts_index = index.posts;
 			let results     = posts_index.filter(post => post.path == path );
 
 			show_results( '{{main_content}}', content, results, single_template );
 
-			window.history.pushState( "object or string", results[0].title, raw_path );
+			window.history.pushState( 'object or string', results[0].title, raw_path );
 
 			e.preventDefault();
 		}
@@ -295,28 +300,33 @@ window.onload=function() {
 
 		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( counter ) );
 
-		show_results( '{{main_content}}'+pagination_wrapper, content, results, excerpt_template );
+		let url = index.home_url;
+		if ( 1 !== get_current_pagination_number() ) {
+			url = url + '/' + index.pagination_page_text + '/' + get_current_pagination_number() + '/';
+console.log( url );
+		}
 
-		window.history.pushState( "object or string", index.home_title, index.home_url );
+		window.history.pushState( 'object or string', index.home_title, url );
+
+		show_results( '{{main_content}}' + pagination_wrapper, content, results, excerpt_template );
 	}
 
 	/**
 	 * Show the pagination.
+	 *
+	 * @param int counter The number of items to paginate.
+	 * @return string pagination_items The pagination items.
 	 */
 	function show_pagination( counter ) {
-		let number_of_pages = Math.ceil( counter / index.posts_per_page );
-
-//let prev_button_text = '&laquo; Previous';
-//let next_button_text = 'Next &raquo;';
-let current_page     = 9;
-
+		let number_of_pages      = Math.ceil( counter / index.posts_per_page );
 		let this_pagination_item = '';
 		let pagination_items     = '';
 		let spacer               = null;
+
 		for ( let i = 1; i <=  number_of_pages; i++ ) {
 
 			// Add spacer.
-			let gap = i - current_page;
+			let gap = i - get_current_pagination_number();
 			if (
 				( Math.abs( gap ) > 2 ) // only show items in batches of 3.
 				&&
@@ -338,10 +348,10 @@ let current_page     = 9;
 
 			// Set item HTML.
 			this_pagination_item = pagination_item.replace( '{{text}}', i );
-			this_pagination_item = this_pagination_item.replace( '{{url}}', home_url + '/page/' + i + '/' );
+			this_pagination_item = this_pagination_item.replace( '{{url}}', home_url + '/' + index.pagination_page_text + '/' + i + '/' );
 
 			// Set current page as active.
-			if ( current_page === i ) {
+			if ( get_current_pagination_number() === i ) {
 				spacer               = null;
 				this_pagination_item = this_pagination_item.replace( '<li>', '<li class="active">' );
 			}
@@ -350,16 +360,32 @@ let current_page     = 9;
 		}
 
 		// Show previous button.
-		if ( 1 !== current_page ) {
+		if ( 1 !== get_current_pagination_number() ) {
 			pagination_items = '<li><a href="' + home_url + '/">' + index.prev_button_text + '</a></li>' + pagination_items;
 		}
 
 		// Show next button.
-		if ( number_of_pages !== current_page ) {
-			pagination_items = pagination_items + '<li><a href="' + home_url + '/page/' + ( current_page + 1 ) + '/">' + index.next_button_text + '</a></li>';
+		if ( number_of_pages !== get_current_pagination_number() ) {
+			pagination_items = pagination_items + '<li><a href="' + home_url + '/' + index.pagination_page_text + '/' + ( get_current_pagination_number() + 1 ) + '/">' + index.next_button_text + '</a></li>';
 		}
 
 		return pagination_items;
+	}
+
+	/**
+	 * Get the current pagination number.
+	 *
+	 * @return int The page number.
+	 */
+	function get_current_pagination_number() {
+		let path = window.location.href.replace( index.home_url, '' );
+
+		let number;
+		number = path.replace( '/' + index.pagination_page_text + '/', '' );
+		number = number.replace( '/', '' );
+
+console.log( number );
+		return number;
 	}
 
 }
