@@ -87,7 +87,6 @@ window.onload=function() {
 
 			// If value is blank, then load home page.
 			if ( '' === e.target.value ) {
-				window.history.pushState( "object or string", index.home_title, index.home_url );
 				show_posts_page();
 				return;
 			}
@@ -103,6 +102,7 @@ window.onload=function() {
 		}
 	);
 
+
 	/**
 	 * Handle click events.
 	 */
@@ -110,15 +110,32 @@ window.onload=function() {
 		'click',
 		function( e ) {
 
+			// Get the href.
+			let href = '';
 			if ( typeof( e.target.href ) === 'undefined' ) {
+
+				if ( typeof( e.target.parentNode.href ) === 'undefined' ) {
+					return;
+				}
+
+				href = e.target.parentNode.href;
+			} else {
+				href = e.target.href;
+			}
+
+			let raw_path = href.replace( index.home_url, '' );
+			path         = raw_path.split( '#' )[0]; // Strip anchor links.
+
+			// If home page, then show posts page.
+			if ( '/' === path || '' === path ) {
+				show_posts_page();
+				e.preventDefault();
 				return;
 			}
 
-			let raw_path = e.target.href.replace( index.home_url, '' );
-			path         = raw_path.split( '#' )[0]; // Strip anchor links.
 
 			let posts_index = index.posts;
-			let results     = posts_index.filter(post => post.path == path )
+			let results     = posts_index.filter(post => post.path == path );
 
 			show_results( '{{main_content}}', content, results, single_template );
 
@@ -273,6 +290,8 @@ window.onload=function() {
 		}
 
 		show_results( '{{main_content}}', content, results, excerpt_template );
+
+		window.history.pushState( "object or string", index.home_title, index.home_url );
 	}
 
 }
