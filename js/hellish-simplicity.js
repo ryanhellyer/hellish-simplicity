@@ -64,6 +64,8 @@ window.onload=function() {
 		</footer><!-- .entry-meta -->
 	</article><!-- #post-{{id}} -->`;
 	let content = document.getElementById( 'site-content' );
+	let pagination_wrapper = '<ul id="numeric-pagination">{{{content}}}</ul>';
+	let pagination_item = '<li><a href="{{url}}">{{text}}</a></li>';
 
 	get_index();
 
@@ -112,9 +114,9 @@ window.onload=function() {
 
 			// Get the href.
 			let href = '';
-			if ( typeof( e.target.href ) === 'undefined' ) {
+			if ( 'undefined' === typeof( e.target.href ) ) {
 
-				if ( typeof( e.target.parentNode.href ) === 'undefined' ) {
+				if ( 'undefined' === typeof( e.target.parentNode.href ) ) {
 					return;
 				}
 
@@ -270,6 +272,7 @@ window.onload=function() {
 	function show_posts_page() {
 		let results = [];
 		let key     = 0;
+		let counter = 0;
 
 		for ( let i = 0; i < index.posts.length; i++ ) {
 
@@ -287,9 +290,68 @@ window.onload=function() {
 				key++;
 			}
 
+			counter++;
 		}
 
-		show_results( '{{main_content}}', content, results, excerpt_template );
+		// Pagination.
+		let number_of_pages = Math.ceil( counter / index.posts_per_page );
+
+		let prev_button_text = '&laquo; Previous';
+		let next_button_text = 'Next &raquo;';
+		let current_page     = 9;
+
+		let this_pagination_item = '';
+		let pagination_items     = '';
+		let spacer               = null;
+		for ( let i = 1; i <=  number_of_pages; i++ ) {
+
+			// Add spacer.
+			let gap = i - current_page;
+			if (
+				( Math.abs( gap ) > 2 ) // only show items in batches of 3.
+				&&
+				number_of_pages !== ( gap + 1 )
+				&&
+				1 !== i
+				&&
+				number_of_pages !== i
+			) {
+
+				if ( null !== spacer ) {
+					continue;
+				}
+
+				pagination_items = pagination_items + '<li>&#8230;</li>';
+				spacer           = i;
+				continue;
+			}
+
+			// Set item HTML.
+			this_pagination_item = pagination_item.replace( '{{text}}', i );
+			this_pagination_item = this_pagination_item.replace( '{{url}}', home_url + '/page/' + i + '/' );
+
+			// Set current page as active.
+			if ( current_page === i ) {
+				spacer               = null;
+				this_pagination_item = this_pagination_item.replace( '<li>', '<li class="active">' );
+			}
+
+			pagination_items = pagination_items + this_pagination_item;
+		}
+
+		// Show previous button.
+		if ( 1 !== current_page ) {
+			pagination_items = '<li><a href="' + home_url + '/">' + prev_button_text + '</a></li>' + pagination_items;
+		}
+
+		// Show next button.
+		if ( number_of_pages !== current_page ) {
+			pagination_items = pagination_items + '<li><a href="' + home_url + '/page/' + ( current_page + 1 ) + '/">' + next_button_text + '</a></li>';
+		}
+
+		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', pagination_items );
+
+		show_results( '{{main_content}}'+pagination_wrapper, content, results, excerpt_template );
 
 		window.history.pushState( "object or string", index.home_title, index.home_url );
 	}
