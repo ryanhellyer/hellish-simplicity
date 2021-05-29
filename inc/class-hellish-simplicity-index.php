@@ -43,12 +43,14 @@ class Hellish_Simplicity_Index {
 		}
 
 		$index = array(
-			'home_url'       => esc_url( home_url() ),
-			'posts'          => $this->index_posts(),
-			'authors'        => json_encode( $authors ),
-			'date_format'    => esc_html( get_option( 'date_format' ) ),
-			'home_title'     => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
-			'posts_per_page' => absint( get_option( 'posts_per_page' ) ),
+			'home_url'         => esc_url( home_url() ),
+			'posts'            => $this->index_posts(),
+			'authors'          => json_encode( $authors ),
+			'date_format'      => esc_html( get_option( 'date_format' ) ),
+			'home_title'       => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
+			'posts_per_page'   => absint( get_option( 'posts_per_page' ) ),
+			'prev_button_text' => esc_html__( '&laquo; Previous', 'hellish-simplicity' ),
+			'next_button_text' => esc_html__( 'Next &raquo;', 'hellish-simplicity' ),
 		);
 
 		echo json_encode( $index );

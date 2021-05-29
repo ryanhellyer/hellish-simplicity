@@ -293,12 +293,22 @@ window.onload=function() {
 			counter++;
 		}
 
-		// Pagination.
+		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( counter ) );
+
+		show_results( '{{main_content}}'+pagination_wrapper, content, results, excerpt_template );
+
+		window.history.pushState( "object or string", index.home_title, index.home_url );
+	}
+
+	/**
+	 * Show the pagination.
+	 */
+	function show_pagination( counter ) {
 		let number_of_pages = Math.ceil( counter / index.posts_per_page );
 
-		let prev_button_text = '&laquo; Previous';
-		let next_button_text = 'Next &raquo;';
-		let current_page     = 9;
+//let prev_button_text = '&laquo; Previous';
+//let next_button_text = 'Next &raquo;';
+let current_page     = 9;
 
 		let this_pagination_item = '';
 		let pagination_items     = '';
@@ -341,19 +351,15 @@ window.onload=function() {
 
 		// Show previous button.
 		if ( 1 !== current_page ) {
-			pagination_items = '<li><a href="' + home_url + '/">' + prev_button_text + '</a></li>' + pagination_items;
+			pagination_items = '<li><a href="' + home_url + '/">' + index.prev_button_text + '</a></li>' + pagination_items;
 		}
 
 		// Show next button.
 		if ( number_of_pages !== current_page ) {
-			pagination_items = pagination_items + '<li><a href="' + home_url + '/page/' + ( current_page + 1 ) + '/">' + next_button_text + '</a></li>';
+			pagination_items = pagination_items + '<li><a href="' + home_url + '/page/' + ( current_page + 1 ) + '/">' + index.next_button_text + '</a></li>';
 		}
 
-		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', pagination_items );
-
-		show_results( '{{main_content}}'+pagination_wrapper, content, results, excerpt_template );
-
-		window.history.pushState( "object or string", index.home_title, index.home_url );
+		return pagination_items;
 	}
 
 }
