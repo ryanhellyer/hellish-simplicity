@@ -7,8 +7,35 @@ NEED TO INDEX ALL TAXONOMY PAGINATION PAGES.
 NEED TO HIDE MONTH AND DAY ARCHIVES.
 
  */
+// this part is the service worker:
+//     if('serviceWorker' in navigator){
+        // Register service worker
+//        console.log('Service Worker is supported');
+//    }
+
+//salert('test');
+//window.addEventListener("load", () => {
+//});
 
 window.onload=function() {
+
+
+console.log('Service workers require https therefore this will not work here ... yet');
+//if ( 'serviceWorker' in navigator ) {
+console.log('service');
+	navigator.serviceWorkerContainer.register( 'wp-content/themes/hellish-simplicity/js/offline.js' ).then(
+		function( reg ) {
+			console.log( 'Service Worker registration succeeded. Scope is ' + reg.scope );
+		}
+	).catch(
+		function( err ) {
+			console.error( 'Service Worker registration failed with error ' + err );
+		}
+	);
+//}
+
+
+
 	let fuse;
 	let index;
 	let excerpt_template = `

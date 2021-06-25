@@ -1,4 +1,12 @@
 <?php
+/**
+ * Index file.
+ * Loads the JSON blob used for generating the site content.
+ *
+ * @package    Hellish Simplicity
+ * @author     Ryan Hellyer <ryanhellyer@gmail.com
+ * @copyright  2021 Ryan Hellyer
+ */
 
 /**
  * Primary class used to load the Hellish Simplicity theme.
@@ -13,28 +21,28 @@ class Hellish_Simplicity_Setup {
 
 	/**
 	 * Theme version number.
-	 * 
+	 *
 	 * @var string
 	 */
 	const VERSION_NUMBER = '2.1';
 
 	/**
 	 * The default header text.
-	 * 
+	 *
 	 * @var string
 	 */
 	const DEFAULT_HEADER_TEXT = 'Custom<span>Header</span><small>.com</small>';
 
 	/**
 	 * The header text option name.
-	 * 
+	 *
 	 * @var string
 	 */
 	const HEADER_TEXT_OPTION = 'header-text';
 
 	/**
 	 * Theme name.
-	 * 
+	 *
 	 * @var string
 	 */
 	const THEME_NAME = 'hellish-simplicity';
@@ -58,7 +66,7 @@ class Hellish_Simplicity_Setup {
 		add_action( 'admin_init', array( $this, 'editor_stylesheet' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'comment_reply' ) );
 		add_action( 'customize_register', array( $this, 'customize_register' ) );
-		add_action( 'customize_render_control_' . self::HEADER_TEXT_OPTION,  array( $this, 'customizer_help' ) );
+		add_action( 'customize_render_control_' . self::HEADER_TEXT_OPTION, array( $this, 'customizer_help' ) );
 		add_action( 'admin_head', array( $this, 'admin_menu_link' ) );
 
 		// Add filters.
@@ -132,10 +140,11 @@ class Hellish_Simplicity_Setup {
 		$js .= "let home_url = '" . esc_url( home_url() ) . "';\n";
 
 		// List the authors.
-		$key = 'hellish-simplicity-authors';
-		if ( false === ( $authors = get_transient( $key ) ) ) {
+		$key     = 'hellish-simplicity-authors';
+		$authors = get_transient( $key );
+		if ( false === $authors ) {
 			$users = get_users();
-			foreach( $users as $key => $user ) {
+			foreach ( $users as $key => $user ) {
 				$user_id = absint( $user->data->ID );
 
 				if ( 0 < count_user_posts( $user_id ) ) {
@@ -149,7 +158,7 @@ class Hellish_Simplicity_Setup {
 			set_transient( $key, $authors, 1 * MINUTE_IN_SECONDS );
 		}
 		if ( isset( $authors ) ) {
-			$js .= "let authors = '" . json_encode( $authors ) . "';\n";
+			$js .= "let authors = '" . wp_json_encode( $authors ) . "';\n";
 		}
 
 		// Date format.
@@ -204,20 +213,29 @@ class Hellish_Simplicity_Setup {
 	public function customize_register( $wp_customize ) {
 
 		// Theme Footer.
-		$wp_customize->add_setting( self::HEADER_TEXT_OPTION, array(
-			'type'              => 'option',
-			'sanitize_callback' => array( $this, 'sanitize' ),
-			'capability'        => 'edit_theme_options',
-		) );
-		$wp_customize->add_section( 'header_text', array(
-			'title'             => esc_html__( 'Header Text', 'hellish-simplicity' ),
-			'priority'          => 10,
-		) );
-		$wp_customize->add_control( self::HEADER_TEXT_OPTION, array(
-			'section'           => 'header_text',
-			'label'             => esc_html__( 'Header Text', 'hellish-simplicity' ),
-			'type'              => 'text',
-		) );
+		$wp_customize->add_setting(
+			self::HEADER_TEXT_OPTION,
+			array(
+				'type'              => 'option',
+				'sanitize_callback' => array( $this, 'sanitize' ),
+				'capability'        => 'edit_theme_options',
+			)
+		);
+		$wp_customize->add_section(
+			'header_text',
+			array(
+				'title'    => esc_html__( 'Header Text', 'hellish-simplicity' ),
+				'priority' => 10,
+			)
+		);
+		$wp_customize->add_control(
+			self::HEADER_TEXT_OPTION,
+			array(
+				'section' => 'header_text',
+				'label'   => esc_html__( 'Header Text', 'hellish-simplicity' ),
+				'type'    => 'text',
+			)
+		);
 
 	}
 
@@ -235,7 +253,7 @@ class Hellish_Simplicity_Setup {
 
 	/**
 	 * Adding a search form to the post
-	 * 
+	 *
 	 * @param string $html The search form HTML.
 	 * @return string The modified search form HTML.
 	 */
@@ -269,7 +287,7 @@ class Hellish_Simplicity_Setup {
 			2 => 'customize.php?autofocus%5Bcontrol%5D=' . self::HEADER_TEXT_OPTION,
 		);
 
-		// Merging menus together
+		// Merging menus together.
 		$submenu['themes.php'] = array_merge( $submenu['themes.php'], $themes_submenu );
 	}
 
@@ -280,10 +298,10 @@ class Hellish_Simplicity_Setup {
 	 * @return string The sanitized header text.
 	 * @access static
 	 */
-	static public function sanitize( $header_text ) {
+	public static function sanitize( $header_text ) {
 		$allowed_html = array(
 			'small' => array(),
-			'span' => array(),
+			'span'  => array(),
 		);
 		return wp_kses( $header_text, $allowed_html );
 	}

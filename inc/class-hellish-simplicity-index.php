@@ -1,4 +1,12 @@
 <?php
+/**
+ * Index file.
+ * Loads the JSON blob used for generating the site content.
+ *
+ * @package    Hellish Simplicity
+ * @author     Ryan Hellyer <ryanhellyer@gmail.com
+ * @copyright  2021 Ryan Hellyer
+ */
 
 /**
  * Indexes the posts for use by FuseJS.
@@ -17,7 +25,7 @@ class Hellish_Simplicity_Index {
 	 */
 	public function __construct() {
 
-		if ( '/hellish-simplicity-index/' === $_SERVER['REQUEST_URI'] ) {
+		if ( isset( $_SERVER['REQUEST_URI'] ) && '/hellish-simplicity-index/' === $_SERVER['REQUEST_URI'] ) {
 			$this->create_index();
 		}
 	}
@@ -25,13 +33,12 @@ class Hellish_Simplicity_Index {
 	/**
 	 * Grabs list of all posts.
 	 *
-	 * @param bool $search Whether to return search data or not.
 	 * @global object $wpdb The WordPress database object.
 	 */
 	public function create_index() {
 
 		$users = get_users();
-		foreach( $users as $key => $user ) {
+		foreach ( $users as $key => $user ) {
 			$user_id = absint( $user->data->ID );
 
 			if ( 0 < count_user_posts( $user_id ) ) {
@@ -45,7 +52,7 @@ class Hellish_Simplicity_Index {
 		$index = array(
 			'home_url'             => esc_url( home_url() ),
 			'posts'                => $this->index_posts(),
-			'authors'              => json_encode( $authors ),
+			'authors'              => wp_json_encode( $authors ),
 			'date_format'          => esc_html( get_option( 'date_format' ) ),
 			'home_title'           => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
 			'posts_per_page'       => absint( get_option( 'posts_per_page' ) ),
@@ -54,14 +61,13 @@ class Hellish_Simplicity_Index {
 			'next_button_text'     => esc_html__( 'Next &raquo;', 'hellish-simplicity' ),
 		);
 
-		echo json_encode( $index );
+		echo wp_json_encode( $index );
 		die;
 	}
 
 	/**
 	 * Grabs list of all posts.
 	 *
-	 * @param bool $search Whether to return search data or not.
 	 * @global object $wpdb The WordPress database object.
 	 */
 	public function index_posts() {
@@ -83,7 +89,7 @@ class Hellish_Simplicity_Index {
 			. 'LEFT JOIN `' . $term_tax_table_name . '` tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy IN '
 			. $taxonomies_string . ' '
 			. ' WHERE post_status IN ( ' . $post_statuses_string . ' ) 
-			AND post_type IN ( ' . implode(',', array_fill(0, count( $post_types ), '%s') ) . ' ) '
+			AND post_type IN ( ' . implode( ',', array_fill( 0, count( $post_types ), '%s' ) ) . ' ) '
 			. 'GROUP BY p.id';
 
 		$query = $wpdb->prepare( $query_string, $post_types );
