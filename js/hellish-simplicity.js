@@ -19,7 +19,7 @@ NEED TO HIDE MONTH AND DAY ARCHIVES.
 
 window.onload=function() {
 
-
+/*
 console.log('Service workers require https therefore this will not work here ... yet');
 //if ( 'serviceWorker' in navigator ) {
 console.log('service');
@@ -33,7 +33,7 @@ console.log('service');
 		}
 	);
 //}
-
+*/
 
 
 	let fuse;
@@ -131,7 +131,6 @@ console.log('service');
 		}
 	);
 
-
 	/**
 	 * Handle click events.
 	 */
@@ -155,18 +154,23 @@ console.log('service');
 			let raw_path = href.replace( index.home_url, '' );
 			path         = raw_path.split( '#' )[0]; // Strip anchor links.
 
-			// If home page, then show posts page.
-			if ( '/' === path || '' === path ) {
+			// If pagination of home page.
+			var path_split = path.split( '/' );
+			if (
+				'/' === path
+				||
+				'' === path
+				||
+				(
+					path_split[1] === index.pagination_page_text
+					&&
+					! isNaN( path_split[2] )
+				)
+			) {
 				show_posts_page();
 				e.preventDefault();
 				return;
 			}
-
-if ( '/' + index.pagination_page_text + '/8/' === path ) {
-	show_posts_page();
-	e.preventDefault();
-	return;
-}
 
 			let posts_index = index.posts;
 			let results     = posts_index.filter(post => post.path == path );
@@ -187,7 +191,7 @@ if ( '/' + index.pagination_page_text + '/8/' === path ) {
 		var request = new XMLHttpRequest();
 		request.open(
 			'GET',
-			'/hellish-simplicity-index/',
+			'/hellish-simplicity.json',
 			true
 		);
 		request.setRequestHeader( 'Content-type', 'application/json' );
@@ -306,7 +310,28 @@ if ( '/' + index.pagination_page_text + '/8/' === path ) {
 		let key     = 0;
 		let counter = 0;
 
+		// Calculate pagination level.
+		var path_split = path.split( '/' );
+		let pagination = 1;
+		if (
+			'/' === path
+			||
+			'' === path
+			||
+			(
+				path_split[1] === index.pagination_page_text
+				&&
+				! isNaN( path_split[2] )
+			)
+		) {
+			pagination = path_split[2];
+console.log( path_split );
+console.log( pagination );
+		}
+
 		for ( let i = 0; i < index.posts.length; i++ ) {
+
+console.log( 'i: ' + i + '; pagination: ' + pagination + '; index.posts_per_page: ' + index.posts_per_page );
 
 			// If not on a 'post', then ignore it.
 			if ( 'post' !== index.posts[ i ].post_type ) {
@@ -314,23 +339,74 @@ if ( '/' + index.pagination_page_text + '/8/' === path ) {
 			}
 
 			// If sticky put on front.
-			if ( true === index.posts[ i ].sticky ) {
+/*			if (
+				true === index.posts[ i ].sticky 
+				&&
+				1 === pagination
+			 ) {
 				results.unshift( index.posts[ i ] );
 				key++;
-			} else if ( key < index.posts_per_page ) {
+			} else if (
+				i < index.posts_per_page
+				&&
+				1 === pagination
+			) {
 				results[ key ] = index.posts[ i ];
 				key++;
+			} else 
+			*/
+i = parseInt( i );
+pagination = parseInt( pagination );
+index.posts_per_page = parseInt( index.posts_per_page );
+if ( isNaN( i ) ) {
+	console.log( 'not a number i' );
+	console.log( i );
+}
+if ( isNaN( pagination ) ) {
+	console.log( 'not a number pag' );
+	console.log( pagination );
+}
+if ( isNaN( index.posts_per_page ) ) {
+	console.log( 'not a number index' );
+	console.log( index.posts_per_page );
+}
+
+			if (
+//				1 !== pagination
+//				&&
+//				(
+//				i >= ( ( pagination - 1 ) * index.posts_per_page )
+//				&&
+//3 < ( 2 * 3 )
+				i < ( pagination * index.posts_per_page )
+//				)
+			) {
+				results[ key ] = index.posts[ i ];
+console.log( 'SUCCESS key: ' + key + '; index.posts[ i ]: ' + index.posts[ i ] + '; i: ' + i );
+				key++;
+			} else {
+console.log( 'FAIL key: ' + key + '; index.posts[ i ]: ' + index.posts[ i ] + '; i: ' + i );
 			}
 
 			counter++;
 		}
 
+//index.posts_per_page
+
+console.log( results );
+console.log('-------------');
 		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( counter ) );
 
+		// Get URL based on pagination.
 		let url = index.home_url;
-		if ( 1 !== get_current_pagination_number() ) {
-			url = url + '/' + index.pagination_page_text + '/' + get_current_pagination_number() + '/';
-console.log( url );
+		if (
+			1 !== get_current_pagination_number()
+			&&
+			'' !== get_current_pagination_number()
+			&&
+			! isNaN( get_current_pagination_number() )
+		) {
+			url = index.home_url + '/' + index.pagination_page_text + '/' + get_current_pagination_number() + '/';
 		}
 
 		window.history.pushState( 'object or string', index.home_title, url );
@@ -375,7 +451,7 @@ console.log( url );
 
 			// Set item HTML.
 			this_pagination_item = pagination_item.replace( '{{text}}', i );
-			this_pagination_item = this_pagination_item.replace( '{{url}}', home_url + '/' + index.pagination_page_text + '/' + i + '/' );
+			this_pagination_item = this_pagination_item.replace( '{{url}}', index.home_url + '/' + index.pagination_page_text + '/' + i + '/' );
 
 			// Set current page as active.
 			if ( get_current_pagination_number() === i ) {
@@ -388,12 +464,12 @@ console.log( url );
 
 		// Show previous button.
 		if ( 1 !== get_current_pagination_number() ) {
-			pagination_items = '<li><a href="' + home_url + '/">' + index.prev_button_text + '</a></li>' + pagination_items;
+			pagination_items = '<li><a href="' + index.home_url + '/">' + index.prev_button_text + '</a></li>' + pagination_items;
 		}
 
 		// Show next button.
 		if ( number_of_pages !== get_current_pagination_number() ) {
-			pagination_items = pagination_items + '<li><a href="' + home_url + '/' + index.pagination_page_text + '/' + ( get_current_pagination_number() + 1 ) + '/">' + index.next_button_text + '</a></li>';
+			pagination_items = pagination_items + '<li><a href="' + index.home_url + '/' + index.pagination_page_text + '/' + ( get_current_pagination_number() + 1 ) + '/">' + index.next_button_text + '</a></li>';
 		}
 
 		return pagination_items;
@@ -406,12 +482,10 @@ console.log( url );
 	 */
 	function get_current_pagination_number() {
 		let path = window.location.href.replace( index.home_url, '' );
-
 		let number;
 		number = path.replace( '/' + index.pagination_page_text + '/', '' );
 		number = number.replace( '/', '' );
 
-console.log( number );
 		return number;
 	}
 

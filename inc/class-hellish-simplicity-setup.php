@@ -126,47 +126,7 @@ class Hellish_Simplicity_Setup {
 			wp_enqueue_script( 'mustaches', get_template_directory_uri() . '/js/mustaches.min.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'fusejs', get_template_directory_uri() . '/js/fuse.min.js', array(), self::VERSION_NUMBER, true );
 			wp_enqueue_script( 'hellish-simplicity', get_template_directory_uri() . '/js/hellish-simplicity.js', array(), self::VERSION_NUMBER, true );
-			wp_add_inline_script( 'hellish-simplicity', $this->inline_scripts() );
 		}
-	}
-
-	/**
-	 * Display inline scripts.
-	 */
-	public function inline_scripts() {
-		$js = '';
-
-		// Home URL.
-		$js .= "let home_url = '" . esc_url( home_url() ) . "';\n";
-
-		// List the authors.
-		$key     = 'hellish-simplicity-authors';
-		$authors = get_transient( $key );
-		if ( false === $authors ) {
-			$users = get_users();
-			foreach ( $users as $key => $user ) {
-				$user_id = absint( $user->data->ID );
-
-				if ( 0 < count_user_posts( $user_id ) ) {
-					$authors[ $user_id ] = array(
-						'display_name' => esc_html( $user->data->display_name ),
-						'url'          => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
-					);
-				}
-			}
-
-			set_transient( $key, $authors, 1 * MINUTE_IN_SECONDS );
-		}
-		if ( isset( $authors ) ) {
-			$js .= "let authors = '" . wp_json_encode( $authors ) . "';\n";
-		}
-
-		// Date format.
-		$js .= "let date_format = '" . esc_html( get_option( 'date_format' ) ) . "';\n";
-
-		$js .= "let home_title = '" . esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ) . "';\n";
-
-		return $js;
 	}
 
 	/**

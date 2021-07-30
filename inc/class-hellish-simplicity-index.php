@@ -19,13 +19,12 @@
  */
 class Hellish_Simplicity_Index {
 
-
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 
-		if ( isset( $_SERVER['REQUEST_URI'] ) && '/hellish-simplicity-index/' === $_SERVER['REQUEST_URI'] ) {
+		if ( isset( $_SERVER['REQUEST_URI'] ) && '/hellish-simplicity.json' === $_SERVER['REQUEST_URI'] ) {
 			$this->create_index();
 		}
 	}
@@ -36,6 +35,7 @@ class Hellish_Simplicity_Index {
 	 * @global object $wpdb The WordPress database object.
 	 */
 	public function create_index() {
+		header( 'Content-Type: application/json' );
 
 		$users = get_users();
 		foreach ( $users as $key => $user ) {
