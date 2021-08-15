@@ -151,10 +151,11 @@ console.log('service');
 				href = e.target.href;
 			}
 
+			let title;
 			let raw_path = href.replace( index.home_url, '' );
 			path         = raw_path.split( '#' )[0]; // Strip anchor links.
 
-			// If pagination of home page.
+			// If posts page.
 			var path_split = path.split( '/' );
 			if (
 				'/' === path
@@ -168,18 +169,19 @@ console.log('service');
 				)
 			) {
 				show_posts_page();
-				e.preventDefault();
-				return;
+				title = index.home_title;
+			} else {
+				let posts_index = index.posts;
+				let results     = posts_index.filter(post => post.path == path );
+				title       = results[0].title;
+
+				show_results( '{{main_content}}', content, results, single_template );
 			}
 
-			let posts_index = index.posts;
-			let results     = posts_index.filter(post => post.path == path );
-
-			show_results( '{{main_content}}', content, results, single_template );
-
-			window.history.pushState( 'object or string', results[0].title, raw_path );
+			window.history.pushState( 'object or string', title, raw_path );
 
 			e.preventDefault();
+			return;
 		}
 	);
 
@@ -306,112 +308,156 @@ console.log('service');
 	 * Display the posts page.
 	 */
 	function show_posts_page() {
-		let results = [];
-		let key     = 0;
 		let counter = 0;
 
-		// Calculate pagination level.
-		var path_split = path.split( '/' );
-		let pagination = 1;
-		if (
-			'/' === path
-			||
-			'' === path
-			||
-			(
-				path_split[1] === index.pagination_page_text
-				&&
-				! isNaN( path_split[2] )
-			)
-		) {
-			pagination = path_split[2];
-console.log( path_split );
-console.log( pagination );
-		}
-
-		for ( let i = 0; i < index.posts.length; i++ ) {
-
-console.log( 'i: ' + i + '; pagination: ' + pagination + '; index.posts_per_page: ' + index.posts_per_page );
-
-			// If not on a 'post', then ignore it.
-			if ( 'post' !== index.posts[ i ].post_type ) {
-				continue;
-			}
-
-			// If sticky put on front.
-/*			if (
-				true === index.posts[ i ].sticky 
-				&&
-				1 === pagination
-			 ) {
-				results.unshift( index.posts[ i ] );
-				key++;
-			} else if (
-				i < index.posts_per_page
-				&&
-				1 === pagination
-			) {
-				results[ key ] = index.posts[ i ];
-				key++;
-			} else 
-			*/
-i = parseInt( i );
-pagination = parseInt( pagination );
-index.posts_per_page = parseInt( index.posts_per_page );
-if ( isNaN( i ) ) {
-	console.log( 'not a number i' );
-	console.log( i );
-}
-if ( isNaN( pagination ) ) {
-	console.log( 'not a number pag' );
-	console.log( pagination );
-}
-if ( isNaN( index.posts_per_page ) ) {
-	console.log( 'not a number index' );
-	console.log( index.posts_per_page );
-}
-
-			if (
-//				1 !== pagination
-//				&&
-//				(
-//				i >= ( ( pagination - 1 ) * index.posts_per_page )
-//				&&
-//3 < ( 2 * 3 )
-				i < ( pagination * index.posts_per_page )
-//				)
-			) {
-				results[ key ] = index.posts[ i ];
-console.log( 'SUCCESS key: ' + key + '; index.posts[ i ]: ' + index.posts[ i ] + '; i: ' + i );
-				key++;
-			} else {
-console.log( 'FAIL key: ' + key + '; index.posts[ i ]: ' + index.posts[ i ] + '; i: ' + i );
-			}
-
-			counter++;
-		}
-
-//index.posts_per_page
-
-console.log( results );
-console.log('-------------');
-		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( counter ) );
+		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( get_total_number_of_posts( 'post' ) ) );
 
 		// Get URL based on pagination.
 		let url = index.home_url;
 		if (
-			1 !== get_current_pagination_number()
+			1 !== get_current_pagination_level()
 			&&
-			'' !== get_current_pagination_number()
+			'' !== get_current_pagination_level()
 			&&
-			! isNaN( get_current_pagination_number() )
+			! isNaN( get_current_pagination_level() )
 		) {
-			url = index.home_url + '/' + index.pagination_page_text + '/' + get_current_pagination_number() + '/';
+			url = index.home_url + '/' + index.pagination_page_text + '/' + get_current_pagination_level() + '/';
 		}
 
 		window.history.pushState( 'object or string', index.home_title, url );
 
-		show_results( '{{main_content}}' + pagination_wrapper, content, results, excerpt_template );
+		show_results( '{{main_content}}' + pagination_wrapper, content, get_results(), excerpt_template );
+	}
+
+	/**
+	 * Get the posts page results.
+	 *
+	 * @param string post_type The post-type for the posts page.
+	 * @return array results The posts page results.
+	 */
+	function get_results( post_type = 'post' ) {
+		let total_number_of_posts = 0;
+		let key                   = 0;
+		let results               = [];
+
+		// Treat first level differently due to it containing sticky posts.
+		if ( 1 === get_pagination_level( path ) ) {
+			return get_first_page_results( post_type );
+		} else {
+			let posts = get_all_posts_of_post_type_without_sticky_posts( post_type );
+			for ( let i = 0; i < posts.length; i++ ) {
+				let ceil      = parseInt( Math.ceil( ( i + 1 ) / index.posts_per_page ) );
+				let pag_level = parseInt( get_pagination_level( path ) );
+				if ( ceil === pag_level ) {
+					results[ key ] = posts[ i ];
+					key++;
+				}
+			}
+		}
+
+		return results;
+	}
+
+	/**
+	 * Get all the posts of a specific post-type.
+	 *
+	 * @param string post_type The post-type.
+	 * @return array posts The posts.
+	 */
+	function get_all_posts_of_post_type( post_type ) {
+		let posts = [];
+
+		let x = 0;
+		for ( let i = 0; i < index.posts.length; i++ ) {
+
+			// If not on the correct post-type, then ignore it.
+			if ( post_type === index.posts[ i ].post_type ) {
+				posts[ x ] = index.posts[ i ];
+				x++;
+			}
+		}
+
+		return posts;
+	}
+
+	/**
+	 * Get all the posts of a specific post-type without sticky posts.
+	 *
+	 * @param string post_type The post-type.
+	 * @return array posts The posts.
+	 */
+	function get_all_posts_of_post_type_without_sticky_posts( post_type ) {
+		let posts = get_all_posts_of_post_type( post_type );
+		for ( let i = 0; i < posts.length; i++ ) {
+
+			// If sticky then remove.
+			if ( true === posts[ i ].sticky ) {
+				delete posts[ i ];
+			}
+		}
+
+		return posts;
+	}
+
+	/**
+	 * Get the number of first page results.
+	 * This number is needed because sticky posts throw out the calcuation.
+	 *
+	 * @param string post_type The post-type for the posts page.
+	 * @return int number_of_posts The number of posts to be displayed on the first pagination level.
+	 */
+	function get_first_page_results( post_type ) {
+		let number_of_posts = 0;
+		let results = [];
+		let posts = get_all_posts_of_post_type( post_type );
+		let posts_per_page = index.posts_per_page;
+
+		for ( let i = 0; i < posts.length; i++ ) {
+
+			// If not on the correct post-type, then ignore it.
+			if ( post_type !== posts[ i ].post_type ) {
+				continue;
+			}
+
+			// If sticky put on front.
+			if (
+				true === posts[ i ].sticky 
+			 ) {
+				results.unshift( posts[ i ] );
+				number_of_posts++;
+			} else if (
+				number_of_posts < posts_per_page
+			) {
+			 	results[ number_of_posts ] = posts [ i ];
+				number_of_posts++;
+			}
+		}
+
+		return results;
+	}
+
+	/**
+	 * Get the total number of posts for a specific post-type.
+	 *
+	 * @param string post_type The post-type for the posts page.
+	 * @return int number_of_posts The total number of posts.
+	 */
+	function get_total_number_of_posts( post_type ) {
+		let number_of_posts = 0;
+		let posts = get_all_posts_of_post_type( post_type );
+		let posts_per_page = index.posts_per_page;
+
+		for ( let i = 0; i < posts.length; i++ ) {
+
+			// If not on the correct post-type, then ignore it.
+			if ( post_type !== posts[ i ].post_type ) {
+				continue;
+			}
+
+			number_of_posts++;
+		}
+
+		return number_of_posts;
 	}
 
 	/**
@@ -429,7 +475,7 @@ console.log('-------------');
 		for ( let i = 1; i <=  number_of_pages; i++ ) {
 
 			// Add spacer.
-			let gap = i - get_current_pagination_number();
+			let gap = i - get_current_pagination_level();
 			if (
 				( Math.abs( gap ) > 2 ) // only show items in batches of 3.
 				&&
@@ -454,7 +500,7 @@ console.log('-------------');
 			this_pagination_item = this_pagination_item.replace( '{{url}}', index.home_url + '/' + index.pagination_page_text + '/' + i + '/' );
 
 			// Set current page as active.
-			if ( get_current_pagination_number() === i ) {
+			if ( get_current_pagination_level() === i ) {
 				spacer               = null;
 				this_pagination_item = this_pagination_item.replace( '<li>', '<li class="active">' );
 			}
@@ -463,16 +509,32 @@ console.log('-------------');
 		}
 
 		// Show previous button.
-		if ( 1 !== get_current_pagination_number() ) {
+		if ( 1 !== get_current_pagination_level() ) {
 			pagination_items = '<li><a href="' + index.home_url + '/">' + index.prev_button_text + '</a></li>' + pagination_items;
 		}
 
 		// Show next button.
-		if ( number_of_pages !== get_current_pagination_number() ) {
-			pagination_items = pagination_items + '<li><a href="' + index.home_url + '/' + index.pagination_page_text + '/' + ( get_current_pagination_number() + 1 ) + '/">' + index.next_button_text + '</a></li>';
+		if ( number_of_pages !== get_current_pagination_level() ) {
+			pagination_items = pagination_items + '<li><a href="' + index.home_url + '/' + index.pagination_page_text + '/' + ( get_current_pagination_level() + 1 ) + '/">' + index.next_button_text + '</a></li>';
 		}
 
 		return pagination_items;
+	}
+
+	/*
+	 * Get the pagination level.
+	 *
+	 * @param string path The path to get the pagination level of.
+	 * @return int The pagination level.
+	 */
+	function get_pagination_level( path ) {
+		var path_split = path.split( '/' );
+		let pagination = 1;
+		if ( path_split[1] === index.pagination_page_text ) {
+			pagination = path_split[2];
+		}
+
+		return parseInt( pagination );
 	}
 
 	/**
@@ -480,13 +542,10 @@ console.log('-------------');
 	 *
 	 * @return int The page number.
 	 */
-	function get_current_pagination_number() {
+	function get_current_pagination_level() {
 		let path = window.location.href.replace( index.home_url, '' );
-		let number;
-		number = path.replace( '/' + index.pagination_page_text + '/', '' );
-		number = number.replace( '/', '' );
 
-		return number;
+		return parseInt( get_pagination_level( path ) );
 	}
 
 }
