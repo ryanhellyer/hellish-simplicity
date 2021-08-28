@@ -168,17 +168,17 @@ console.log('service');
 					! isNaN( path_split[2] )
 				)
 			) {
-				show_posts_page();
 				title = index.home_title;
+				window.history.pushState( 'object or string', title, raw_path );
+				show_posts_page();
 			} else {
 				let posts_index = index.posts;
-				let results     = posts_index.filter(post => post.path == path );
+				let results     = posts_index.filter( post => post.path == path );
 				title       = results[0].title;
+				window.history.pushState( 'object or string', title, raw_path );
 
 				show_results( '{{main_content}}', content, results, single_template );
 			}
-
-			window.history.pushState( 'object or string', title, raw_path );
 
 			e.preventDefault();
 			return;
@@ -309,9 +309,7 @@ console.log('service');
 	 */
 	function show_posts_page() {
 		let counter = 0;
-
-		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( get_total_number_of_posts( 'post' ) ) );
-
+/*
 		// Get URL based on pagination.
 		let url = index.home_url;
 		if (
@@ -324,7 +322,11 @@ console.log('service');
 			url = index.home_url + '/' + index.pagination_page_text + '/' + get_current_pagination_level() + '/';
 		}
 
+console.log( get_current_pagination_level() );
 		window.history.pushState( 'object or string', index.home_title, url );
+console.log( get_current_pagination_level() );
+*/
+		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( get_total_number_of_posts( 'post' ) ) );
 
 		show_results( '{{main_content}}' + pagination_wrapper, content, get_results(), excerpt_template );
 	}
@@ -471,7 +473,7 @@ console.log('service');
 		let this_pagination_item = '';
 		let pagination_items     = '';
 		let spacer               = null;
-
+//console.log( 'pag: ' + get_current_pagination_level() );
 		for ( let i = 1; i <=  number_of_pages; i++ ) {
 
 			// Add spacer.
@@ -497,7 +499,11 @@ console.log('service');
 
 			// Set item HTML.
 			this_pagination_item = pagination_item.replace( '{{text}}', i );
-			this_pagination_item = this_pagination_item.replace( '{{url}}', index.home_url + '/' + index.pagination_page_text + '/' + i + '/' );
+			if ( 1 === i ) { // Don't want to show /page/1/.
+				this_pagination_item = this_pagination_item.replace( '{{url}}', index.home_url + '/' );
+			} else {
+				this_pagination_item = this_pagination_item.replace( '{{url}}', index.home_url + '/' + index.pagination_page_text + '/' + i + '/' );
+			}
 
 			// Set current page as active.
 			if ( get_current_pagination_level() === i ) {
@@ -518,7 +524,7 @@ console.log('service');
 			pagination_items = pagination_items + '<li><a href="' + index.home_url + '/' + index.pagination_page_text + '/' + ( get_current_pagination_level() + 1 ) + '/">' + index.next_button_text + '</a></li>';
 		}
 
-		return pagination_items;
+		return pagination_items    + ' ... ' + get_current_pagination_level();
 	}
 
 	/*
