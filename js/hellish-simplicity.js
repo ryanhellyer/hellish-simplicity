@@ -91,7 +91,7 @@ console.log('service');
 		</footer><!-- .entry-meta -->
 	</article><!-- #post-{{id}} -->`;
 	let content = document.getElementById( 'site-content' );
-	let pagination_wrapper = '<ul id="numeric-pagination">{{{content}}}</ul>';
+	let pagination_wrapper = '<ul id="numeric-pagination">{{{pagination_items}}}</ul>';
 	let pagination_item = '<li><a href="{{url}}">{{text}}</a></li>';
 
 	get_index();
@@ -326,9 +326,12 @@ console.log( get_current_pagination_level() );
 		window.history.pushState( 'object or string', index.home_title, url );
 console.log( get_current_pagination_level() );
 */
-		pagination_wrapper = pagination_wrapper.replace( '{{{content}}}', show_pagination( get_total_number_of_posts( 'post' ) ) );
 
 		show_results( '{{main_content}}' + pagination_wrapper, content, get_results(), excerpt_template );
+
+		// Show pagination items.
+		let pagination       = document.getElementById( 'numeric-pagination' );
+		pagination.innerHTML = show_pagination( get_total_number_of_posts( 'post' ) );
 	}
 
 	/**
@@ -469,11 +472,12 @@ console.log( get_current_pagination_level() );
 	 * @return string pagination_items The pagination items.
 	 */
 	function show_pagination( counter ) {
+
 		let number_of_pages      = Math.ceil( counter / index.posts_per_page );
 		let this_pagination_item = '';
 		let pagination_items     = '';
 		let spacer               = null;
-//console.log( 'pag: ' + get_current_pagination_level() );
+
 		for ( let i = 1; i <=  number_of_pages; i++ ) {
 
 			// Add spacer.
@@ -524,7 +528,7 @@ console.log( get_current_pagination_level() );
 			pagination_items = pagination_items + '<li><a href="' + index.home_url + '/' + index.pagination_page_text + '/' + ( get_current_pagination_level() + 1 ) + '/">' + index.next_button_text + '</a></li>';
 		}
 
-		return pagination_items    + ' ... ' + get_current_pagination_level();
+		return pagination_items;
 	}
 
 	/*
