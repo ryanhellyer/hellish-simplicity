@@ -91,7 +91,7 @@ console.log('service');
 		</footer><!-- .entry-meta -->
 	</article><!-- #post-{{id}} -->`;
 	let content = document.getElementById( 'site-content' );
-	let pagination_wrapper = '<ul id="numeric-pagination">{{{pagination_items}}}</ul>';
+	let pagination_wrapper = '<ul id="numeric-pagination"></ul>';
 	let pagination_item = '<li><a href="{{url}}">{{text}}</a></li>';
 
 	get_index();
@@ -174,8 +174,9 @@ console.log('service');
 			} else {
 				let posts_index = index.posts;
 				let results     = posts_index.filter( post => post.path == path );
-				title       = results[0].title;
+				title           = results[0].title;
 				window.history.pushState( 'object or string', title, raw_path );
+				document.title  = title; // Required due to pushstate not supporting title tag changes ... https://github.com/whatwg/html/issues/2174.
 
 				show_results( '{{main_content}}', content, results, single_template );
 			}
