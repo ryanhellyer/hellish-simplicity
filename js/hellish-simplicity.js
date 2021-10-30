@@ -13,7 +13,6 @@ NEED TO HIDE MONTH AND DAY ARCHIVES.
 //        console.log('Service Worker is supported');
 //    }
 
-//salert('test');
 //window.addEventListener("load", () => {
 //});
 
@@ -151,7 +150,7 @@ console.log('service');
 				href = e.target.href;
 			}
 
-			let title;
+			let title, found;
 			let raw_path = href.replace( index.home_url, '' );
 			path         = raw_path.split( '#' )[0]; // Strip anchor links.
 
@@ -168,21 +167,40 @@ console.log('service');
 					! isNaN( path_split[2] )
 				)
 			) {
+				found = true;
 				title = index.home_title;
 				window.history.pushState( 'object or string', title, raw_path );
 				show_posts_page();
 			} else {
+
+				// Look for a post.
 				let posts_index = index.posts;
 				let results     = posts_index.filter( post => post.path == path );
-				title           = results[0].title;
-				window.history.pushState( 'object or string', title, raw_path );
-				document.title  = title; // Required due to pushstate not supporting title tag changes ... https://github.com/whatwg/html/issues/2174.
+				if ( undefined !== results[0] ) {
+					title           = results[0].title;
+					window.history.pushState( 'object or string', title, raw_path );
+					document.title  = title; // Required due to pushstate not supporting title tag changes ... https://github.com/whatwg/html/issues/2174*/
 
-				show_results( '{{main_content}}', content, results, single_template );
+					found = true;
+					show_results( '{{main_content}}', content, results, single_template );
+				}
+
+				// Look for a taxonomy term.
+				let taxonomy_terms = index.terms;
+				let term           = taxonomy_terms.filter( post => post.path == path );
+				if ( undefined !== term[0] ) {
+					fount = true;
+					term  = term[0];
+					console.log( 'display ' + term + ' page here' );
+				}
+
 			}
 
-			e.preventDefault();
-			return;
+			// If a page was found, then stop the page refreshing.
+			if ( true === found ) {
+				e.preventDefault();
+				return;
+			}
 		}
 	);
 
