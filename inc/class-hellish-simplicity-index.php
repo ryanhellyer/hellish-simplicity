@@ -25,8 +25,9 @@ class Hellish_Simplicity_Index {
 	public function __construct() {
 
 		if ( isset( $_SERVER['REQUEST_URI'] ) && '/hellish-simplicity.json' === $_SERVER['REQUEST_URI'] ) {
-			$this->create_index();
+			add_action( 'init', array( $this, 'create_index' ) );
 		}
+
 	}
 
 	/**
@@ -51,6 +52,8 @@ class Hellish_Simplicity_Index {
 
 		$index = array(
 			'home_url'             => esc_url( home_url() ),
+			'taxonomies'           => $this->index_taxonomies(),
+			'terms'                => $this->index_terms(),
 			'posts'                => $this->index_posts(),
 			'authors'              => wp_json_encode( $authors ),
 			'date_format'          => esc_html( get_option( 'date_format' ) ),
@@ -61,8 +64,55 @@ class Hellish_Simplicity_Index {
 			'next_button_text'     => esc_html__( 'Next &raquo;', 'hellish-simplicity' ),
 		);
 
-		echo wp_json_encode( $index );
+		echo wp_json_encode( $index, JSON_PRETTY_PRINT );
 		die;
+	}
+
+	/**
+	 * Grabs list of all public taxonomies.
+	 */
+	public function index_taxonomies() {
+
+		$taxonomies = array();
+		foreach ( $this->get_public_taxonomies() as $taxonomy ) {
+			$taxonomy_data = get_taxonomy( $taxonomy );
+
+			$taxonomies[] = array(
+				'name'        => $taxonomy_data->name,
+				'label'       => $taxonomy_data->label,
+				'description' => $taxonomy_data->description,
+			);
+
+		}
+
+		return $taxonomies;
+	}
+
+	/**
+	 * Grabs list of all taxonomy terms with posts.
+	 */
+	public function index_terms() {
+
+		$terms = array();
+		foreach ( $this->get_public_taxonomies() as $taxonomy ) {
+			$new_terms = get_terms(
+				$taxonomy,
+				array(
+					'hide_empty' => false,
+				)
+			);
+
+			foreach ( $new_terms as $term_data ) {
+				$terms[] = array(
+					'id'       => $term_data->term_id,
+					'name'     => $term_data->name,
+					'slug'     => $term_data->slug,
+					'taxonomy' => $term_data->taxonomy,
+				);
+			}
+		}
+
+		return $terms;
 	}
 
 	/**
@@ -159,6 +209,25 @@ class Hellish_Simplicity_Index {
 		$generated_excerpt = wp_trim_words( $text, 55 );
 
 		return apply_filters( 'get_the_excerpt', $generated_excerpt, $post );
+	}
+
+
+	/**
+	 * Get public taxonomies.
+	 */
+	private function get_public_taxonomies() {
+
+		$args = array(
+			'public'   => true,
+			'_builtin' => true,
+		);
+
+		$taxonomies = array();
+		foreach( get_taxonomies( $args ) as $taxonomy ) {
+			$taxonomies[] = $taxonomy;
+		}
+
+		return $taxonomies;
 	}
 
 }
