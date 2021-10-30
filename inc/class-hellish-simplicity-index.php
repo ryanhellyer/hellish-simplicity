@@ -103,8 +103,10 @@ class Hellish_Simplicity_Index {
 			);
 
 			foreach ( $new_terms as $term_data ) {
+
 				$terms[] = array(
 					'id'       => $term_data->term_id,
+					'path'     => str_replace( home_url(), '', get_term_link( $term_data ) ),
 					'name'     => $term_data->name,
 					'slug'     => $term_data->slug,
 					'taxonomy' => $term_data->taxonomy,
