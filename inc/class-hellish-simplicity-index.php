@@ -32,30 +32,19 @@ class Hellish_Simplicity_Index {
 
 	/**
 	 * Grabs list of all posts.
-	 *
-	 * @global object $wpdb The WordPress database object.
 	 */
 	public function create_index() {
+
 		header( 'Content-Type: application/json' );
-
-		$users = get_users();
-		foreach ( $users as $key => $user ) {
-			$user_id = absint( $user->data->ID );
-
-			if ( 0 < count_user_posts( $user_id ) ) {
-				$authors[ $user_id ] = array(
-					'display_name' => esc_html( $user->data->display_name ),
-					'url'          => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
-				);
-			}
-		}
 
 		$index = array(
 			'home_url'             => esc_url( home_url() ),
 			'taxonomies'           => $this->index_taxonomies(),
 			'terms'                => $this->index_terms(),
 			'posts'                => $this->index_posts(),
-			'authors'              => wp_json_encode( $authors ),
+			'bases'                => $this->index_bases(),
+			'authors'              => $this->index_authors(),
+			'date_archives'        => $this->index_date_archives(),
 			'date_format'          => esc_html( get_option( 'date_format' ) ),
 			'home_title'           => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
 			'posts_per_page'       => absint( get_option( 'posts_per_page' ) ),
@@ -189,6 +178,74 @@ class Hellish_Simplicity_Index {
 		);
 
 		return $post_index;
+	}
+
+	/**
+	 * Grabs list of all URL bases.
+	 *
+	 * @global object $wp_rewrite The WordPress rewrite object.
+	 */
+	private function index_bases() {
+		global $wp_rewrite;
+
+		$bases = array(
+			'author'              => $wp_rewrite->author_base,
+			'search'              => $wp_rewrite->search_base,
+			'comments'            => $wp_rewrite->comments_base,
+			'pagination'          => $wp_rewrite->pagination_base,
+			'comments_pagination' => $wp_rewrite->comments_pagination_base,
+			'feed'                => $wp_rewrite->feed_base,
+		);
+
+		return $bases;
+	}
+
+	/**
+	 * Grabs list of all authors.
+	 */
+	private function index_authors() {
+		$users = get_users();
+		foreach ( $users as $key => $user ) {
+			$user_id = absint( $user->data->ID );
+
+			if ( 0 < count_user_posts( $user_id ) ) {
+				$authors[] = array(
+					'id'           => $user_id,
+					'display_name' => esc_html( $user->data->display_name ),
+					'path'         => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
+				);
+			}
+		}
+
+		return $authors;
+	}
+
+	/**
+	 * Grabs list of all date archives.
+	 */
+	private function index_date_archives() {
+		$archive_html = '';
+		$types        = array( 'daily', 'monthly', 'yearly', );
+		foreach ( $types as $type ) {
+			$archive_html .= wp_get_archives(
+				array(
+					'type'   => $type,
+					'format' => 'custom',
+					'echo'   => false,
+				)
+			);
+		}
+		$archive_blobs = explode( "	<a href='" . home_url(), $archive_html );
+		$paths = array();
+		foreach ( $archive_blobs as $key => $blob ) {
+			$blob = explode( "'>", $blob );
+			if ( ! empty( $blob[0] ) ) {
+				$paths[] = $blob[0];
+			}
+
+		}
+
+		return $paths;
 	}
 
 	/**

@@ -189,9 +189,18 @@ console.log('service');
 				let taxonomy_terms = index.terms;
 				let term           = taxonomy_terms.filter( post => post.path == path );
 				if ( undefined !== term[0] ) {
-					fount = true;
+					found = true;
 					term  = term[0];
 					console.log( 'display ' + term + ' page here' );
+				}
+
+				// Look for an author page.
+				let authors = index.authors;
+				let author  = authors.filter( post => post.path == path );
+				if ( undefined !== author[0] ) {
+					found  = true;
+					author = author[0];
+					console.log( 'display ' + author.display_name + ' page here' );
 				}
 
 			}
