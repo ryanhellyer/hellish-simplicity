@@ -9,7 +9,7 @@
  */
 
 /**
- * Indexes the posts for use by FuseJS.
+ * Indexes posts for "one-page-app" functionality.
  *
  * @copyright Copyright (c), Ryan Hellyer
  * @license http://www.gnu.org/licenses/gpl.html GPL
@@ -39,18 +39,17 @@ class Hellish_Simplicity_Index {
 
 		$index = array(
 			'home_url'             => esc_url( home_url() ),
-			'taxonomies'           => $this->index_taxonomies(),
-			'terms'                => $this->index_terms(),
-			'posts'                => $this->index_posts(),
-			'bases'                => $this->index_bases(),
-			'authors'              => $this->index_authors(),
-			'date_archives'        => $this->index_date_archives(),
+			'taxonomies'           => $this->get_taxonomies_index(),
+			'terms'                => $this->get_terms_index(),
+			'posts'                => $this->get_posts_index(),
+			'date_archives'        => $this->get_date_archives_index(),
 			'date_format'          => esc_html( get_option( 'date_format' ) ),
 			'home_title'           => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
 			'posts_per_page'       => absint( get_option( 'posts_per_page' ) ),
 			'pagination_page_text' => esc_html__( 'page', 'hellish-simplicity' ),
 			'prev_button_text'     => esc_html__( '&laquo; Previous', 'hellish-simplicity' ),
 			'next_button_text'     => esc_html__( 'Next &raquo;', 'hellish-simplicity' ),
+			'templates'            => $this->get_templates(),
 		);
 
 		echo wp_json_encode( $index, JSON_PRETTY_PRINT );
@@ -60,7 +59,7 @@ class Hellish_Simplicity_Index {
 	/**
 	 * Grabs list of all public taxonomies.
 	 */
-	public function index_taxonomies() {
+	public function get_taxonomies_index() {
 
 		$taxonomies = array();
 		foreach ( $this->get_public_taxonomies() as $taxonomy ) {
@@ -80,7 +79,7 @@ class Hellish_Simplicity_Index {
 	/**
 	 * Grabs list of all taxonomy terms with posts.
 	 */
-	public function index_terms() {
+	public function get_terms_index() {
 
 		$terms = array();
 		foreach ( $this->get_public_taxonomies() as $taxonomy ) {
@@ -111,7 +110,7 @@ class Hellish_Simplicity_Index {
 	 *
 	 * @global object $wpdb The WordPress database object.
 	 */
-	public function index_posts() {
+	public function get_posts_index() {
 		global $wpdb;
 
 		$post_types           = array( 'post', 'page' );
@@ -146,16 +145,18 @@ class Hellish_Simplicity_Index {
 				$term_ids[] = absint( $term_id );
 			}
 
+			/*
 			// Work out if sticky or not.
 			$sticky = false;
 			if ( is_sticky( $post->ID ) ) {
 				$sticky = true;
 			}
+			*/
 
 			$post_index[] = array(
 				'id'                 => absint( $post->ID ),
 				'path'               => esc_html( str_replace( home_url(), '', get_permalink( $post ) ) ),
-				'author_id'          => absint( $post->post_author ),
+				//'author_id'          => absint( $post->post_author ),
 				'timestamp'          => strtotime( $post->post_date_gmt ),
 				'content'            => apply_filters( 'the_content', wp_kses_post( $post->post_content ) ),
 				'title'              => wp_kses_post( $post->post_title ),
@@ -164,7 +165,7 @@ class Hellish_Simplicity_Index {
 				'modified_timestamp' => strtotime( $post->post_modified_gmt ),
 				'term_ids'           => $term_ids,
 				'post_type'          => esc_html( $post->post_type ),
-				'sticky'             => $sticky,
+				//'sticky'             => $sticky,
 			);
 
 		}
@@ -181,51 +182,11 @@ class Hellish_Simplicity_Index {
 	}
 
 	/**
-	 * Grabs list of all URL bases.
-	 *
-	 * @global object $wp_rewrite The WordPress rewrite object.
-	 */
-	private function index_bases() {
-		global $wp_rewrite;
-
-		$bases = array(
-			'author'              => $wp_rewrite->author_base,
-			'search'              => $wp_rewrite->search_base,
-			'comments'            => $wp_rewrite->comments_base,
-			'pagination'          => $wp_rewrite->pagination_base,
-			'comments_pagination' => $wp_rewrite->comments_pagination_base,
-			'feed'                => $wp_rewrite->feed_base,
-		);
-
-		return $bases;
-	}
-
-	/**
-	 * Grabs list of all authors.
-	 */
-	private function index_authors() {
-		$users = get_users();
-		foreach ( $users as $key => $user ) {
-			$user_id = absint( $user->data->ID );
-
-			if ( 0 < count_user_posts( $user_id ) ) {
-				$authors[] = array(
-					'id'           => $user_id,
-					'display_name' => esc_html( $user->data->display_name ),
-					'path'         => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
-				);
-			}
-		}
-
-		return $authors;
-	}
-
-	/**
 	 * Grabs list of all date archives.
 	 */
-	private function index_date_archives() {
+	private function get_date_archives_index() {
 		$archive_html = '';
-		$types        = array( 'daily', 'monthly', 'yearly', );
+		$types        = array( 'yearly', ); // Also possible are 'daily' and 'monthly'. 
 		foreach ( $types as $type ) {
 			$archive_html .= wp_get_archives(
 				array(
@@ -246,6 +207,58 @@ class Hellish_Simplicity_Index {
 		}
 
 		return $paths;
+	}
+
+	private function get_templates() {
+		$templates = array(
+			'excerpt' => '
+	<article id="post-{{id}}" class="post-{{id}} post type-post status-publish format-standard hentry">
+		<header class="entry-header">
+			<h2 class="entry-title">
+				<a href="{{path}}" title="Permalink to {{title}}" rel="bookmark">
+					{{title}}
+				</a>
+			</h2><!-- .entry-title -->
+		</header><!-- .entry-header -->
+		<div class="entry-content">
+			{{{excerpt}}}
+		</div><!-- .entry-content -->
+		<footer class="entry-meta">
+			Posted on <a href="{{path}}" title="{{date}}" rel="bookmark"><time class="entry-date updated" datetime="{{date}}">{{date}}</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="/author/{{author_id}}/" title="View all posts by {{author_id}}" rel="author">{{author.display_name}}</a></span></span>
+			<span class="sep"> | </span>
+			<span class="comments-link"><a href="{{path}}#respond">Leave a comment</a></span>
+		</footer><!-- .entry-meta -->
+	</article><!-- #post-{{id}} -->',
+
+		'single_post' => '
+	<article id="post-{{id}}" class="post-{{id}} post type-post status-publish format-standard hentry">
+		<header class="entry-header">
+			<h2 class="entry-title">
+				<a href="{{path}}" title="Permalink to {{title}}" rel="bookmark">
+					{{title}}
+				</a>
+			</h2><!-- .entry-title -->
+		</header><!-- .entry-header -->
+		<div class="entry-content">
+			{{{content}}}
+		</div><!-- .entry-content -->
+		<footer class="entry-meta">
+			Posted on <a href="{{path}}" title="{{date}}" rel="bookmark"><time class="entry-date updated" datetime="{{date}}">{{date}}</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="/author/{{author_id}}/" title="View all posts by {{author_id}}" rel="author">{{author.display_name}}</a></span></span>
+			<span class="sep"> | </span>
+			<span class="comments-link"><a href="{{path}}#respond">Leave a comment</a></span>
+		</footer><!-- .entry-meta -->
+	</article><!-- #post-{{id}} -->',
+
+			'archive' => '
+		<h1 class="page-title">
+			{{title}}
+		</h1><!-- .page-title -->
+
+		{{archive}}',
+
+		);
+
+		return $templates;
 	}
 
 	/**
@@ -273,6 +286,8 @@ class Hellish_Simplicity_Index {
 
 	/**
 	 * Get public taxonomies.
+	 *
+	 * @return array The public taxonomies.
 	 */
 	private function get_public_taxonomies() {
 

@@ -1,0 +1,45 @@
+	/**
+	 * Grabs list of all authors.
+	 */
+	private function index_authors() {
+		$users = get_users();
+		foreach ( $users as $key => $user ) {
+			$user_id = absint( $user->data->ID );
+
+			if ( 0 < count_user_posts( $user_id ) ) {
+				$authors[] = array(
+					'id'           => $user_id,
+					'display_name' => esc_html( $user->data->display_name ),
+					'path'         => esc_url( str_replace( home_url(), '', get_author_posts_url( $user->data->ID ) ) ),
+				);
+			}
+		}
+
+		return $authors;
+	}
+
+
+
+	/**
+	 * Grabs list of all URL bases.
+	 *
+	 * @global object $wp_rewrite The WordPress rewrite object.
+	 */
+	private function index_bases() {
+		global $wp_rewrite;
+
+		$bases = array(
+			'author'              => $wp_rewrite->author_base,
+			'search'              => $wp_rewrite->search_base,
+			'comments'            => $wp_rewrite->comments_base,
+			'pagination'          => $wp_rewrite->pagination_base,
+			'comments_pagination' => $wp_rewrite->comments_pagination_base,
+			'feed'                => $wp_rewrite->feed_base,
+		);
+
+		return $bases;
+	}
+
+
+
+

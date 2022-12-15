@@ -35,6 +35,7 @@ Perhaps don't display comments until JS based system implemented.
 
 No need to query var support in initial version.
 
+# this doesn't work, because terms need to be stored for use with each post path too. Don't want to hunt through object looking for terms.
 $index = array(
 	'home_url'     => esc_url( home_url() ),
 	'templates'    => $this->templates(),
@@ -48,14 +49,22 @@ $index = array(
 	'posts_per_page' => absint( get_option( 'posts_per_page' ) ),
 );
 
+== FEATURES ==
+Store JSON in IndexedDB (data will be ~4 MB).
 
+== FEATURES NOT TO SUPPORT ==
+day/month archives
+author archives
+post pagination
+password protected posts - add later
+private posts - add later
 
 == SCRAPER ==
 Initially, store as plain static file (no base64).
 Nginx try_files - if fails, send to PHP script which logs a 404
 
 == WORDPRESS ==
-1 min WP Cron to generate JSON blob - store in Redis and store iteration number which can be used for query var of JS/CSS.
+1 min WP Cron to generate JSON blob - store in Redis and store iteration number which can be used for query var of JS/CSS. Max Redis key size is 512 MB.
 
 
 
