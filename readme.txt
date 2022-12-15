@@ -55,6 +55,7 @@ Initially, store as plain static file (no base64).
 Nginx try_files - if fails, send to PHP script which logs a 404
 
 == WORDPRESS ==
+1 min WP Cron to generate JSON blob - store in Redis and store iteration number which can be used for query var of JS/CSS.
 
 
 
