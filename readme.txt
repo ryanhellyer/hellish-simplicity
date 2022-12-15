@@ -8,6 +8,39 @@ Donate link: https://geek.hellyer.kiwi/donate/
 A clean simple design. Responsive design makes the theme look good on all devices and the header text can be easily modified via the theme customiser or the themes header admin page.
 
 
+== IDEAS FOR GOING FORWARD ==
+
+PERHAPS NEED TO DO THIS WITH JUST THE BARE MINIMUM REQUIRED FOR RYAN.HELLYER.KIWI?
+/2022/
+/tag/bla/
+/somepost/
+?s=whatever (FuseJS)
+
+check for presence in JSON blob
+Since simpler, can literally just do a URL lookup.
+If multiple posts in one blob, then display archive along with title of the blob. (covers both date and taxonomy archives).
+If one post in blob, then display post.
+easiest method may be to store all post IDs for archives rather than calculating them - can calculate them later to optimise.
+
+For static generation performance, perhaps actual page HTML could be generated from the JSON blob?
+Requires implementing stuff like SEO things, which could be tricky.
+Simplifies, since could do templating via mustache. https://github.com/KiNgMaR/php-mustache (or could simplify by writing own parser - may be faster too)
+
+Stats for generation times:
+advanced-cache.php: 0.006028
+functions.php: 0.11242
+footer.php: 0.155627
+
+Perhaps don't display comments until JS based system implemented.
+
+No need to query var support in initial version.
+
+
+== SCRAPER ==
+Initially, store as plain static file (no base64).
+Nginx try_files - if fails, send to PHP script which logs a 404
+
+
 == Changelog ==
 
 == Version 2.1 =

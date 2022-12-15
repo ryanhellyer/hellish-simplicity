@@ -20,5 +20,18 @@
 
 <?php wp_footer(); ?>
 
+<?php
+define( 'FINAL_TIME', microtime() );
+
+echo "\n";
+echo 'cache_time: ' . ( CACHE_TIME - START_TIME );
+echo "\n";
+echo 'theme_time: ' . ( THEME_TIME - START_TIME );
+echo "\n";
+echo 'final_time: ' . ( FINAL_TIME - START_TIME );
+echo "\n";
+
+?>
+
 </body>
 </html>

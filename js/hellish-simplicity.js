@@ -1,5 +1,4 @@
 /**
-
 perhaps this code should be compiled into one big JS file generated via PHP to keep things like taxonomies etc. in here.
 
 NEED TO INDEX POSTS IN EACH YEAR DATE ARCHIVE.
@@ -103,7 +102,6 @@ console.log('service');
 
 	/**
 	 * Run search queries as typed into search box.
-	 */
 	document.getElementById( 's' ).addEventListener(
 		'keyup',
 		function( e ) {
@@ -129,6 +127,7 @@ console.log('service');
 			show_search_page();
 		}
 	);
+	 */
 
 	/**
 	 * Handle click events.
@@ -154,6 +153,7 @@ console.log('service');
 			let raw_path = href.replace( index.home_url, '' );
 			path         = raw_path.split( '#' )[0]; // Strip anchor links.
 
+console.log( 'close' );
 			// If posts page.
 			var path_split = path.split( '/' );
 			if (

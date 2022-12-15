@@ -1,5 +1,7 @@
 <?php
 declare( strict_types = 1 );
+define( 'THEME_TIME', microtime() );
+
 
 /**
  * Main loading file.
