@@ -35,13 +35,34 @@ Perhaps don't display comments until JS based system implemented.
 
 No need to query var support in initial version.
 
+$index = array(
+	'home_url'     => esc_url( home_url() ),
+	'templates'    => $this->templates(),
+	'paths'        => array(
+		$this->term_archives(), # array( 'type' => 'archive', 'title' => 'something', 'ids' => array( $ids ) )
+		$this->date_archives(), # same as term_archives
+		$this->posts(),         # array( 'title' => 'post title', 'content' => 'post content', 'timestamp' => '1234567890', 'taxonomies' => array( 'post_tag' => array( 42, 44, 87 ) ),
+	);
+	'date_format'    => esc_html( get_option( 'date_format' ) ),
+	'home_title'     => esc_html( get_option( 'blogname' ) ) . ' &#8211; ' . esc_js( get_option( 'blogdescription' ) ),
+	'posts_per_page' => absint( get_option( 'posts_per_page' ) ),
+);
+
+
 
 == SCRAPER ==
 Initially, store as plain static file (no base64).
 Nginx try_files - if fails, send to PHP script which logs a 404
 
+== WORDPRESS ==
+
+
 
 == Changelog ==
+
+== Version 2.2 ==
+December 15th 2022
+* AJAXified
 
 == Version 2.1 =
 March 9th 2020
