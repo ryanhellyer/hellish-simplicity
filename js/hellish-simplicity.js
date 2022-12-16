@@ -153,12 +153,12 @@ window.addEventListener(
 		 * @return bool true if is an archive.
 		 */
 		function is_archive( path ) {
-			// Check if it's a term archive.
-			let terms = index.terms;
-			let term  = terms.filter( term => term.path == path );
-			if ( 1 === term.length ) {
+			if ( true === is_home_archive( path ) ) {
+				return true
+			} else if ( is_term_archive( path ) ) {
 				return true;
 			}
+console.log('add date archive here' );
 
 			return false;
 		}
@@ -171,7 +171,9 @@ window.addEventListener(
 		 */
 		function get_archive( path ) {
 
-			if ( is_term_archive( path ) ) {
+			if ( is_home_archive( path ) ) {
+				return get_home_archive( path );
+			} else if ( is_term_archive( path ) ) {
 				return get_term_archive( path );
 			}
 
@@ -180,10 +182,64 @@ window.addEventListener(
 			return null;
 		}
 
-		function is_term_archive( path ) {
-			return true;
+		/**
+		 * Get posts for home page.
+		 *
+		 * @param string path.
+		 * @return object The posts.
+		 */
+		function get_home_archive( path ) {
+			let home = [];
+			home.title = 'home page yo';
+			home.name = 'home name yo';
+
+			let posts     = get_posts_of_post_type( 'post', index.posts );
+			let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
+
+			home.post_ids = post_ids;
+
+			return home;
 		}
 
+		/**
+		 * Is this a home archive?
+		 *
+		 * @param string path.
+		 * @return bool true if this is the home archive.
+		 */
+		function is_home_archive( path ) {
+			path = path.split( '?' )[0];
+			path = path.split( '#' )[0];
+
+			if ( '/' === path ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Is this a path for a term archive?
+		 *
+		 * @param string path.
+		 * @return bool true if is a term archive.
+		 */
+		function is_term_archive( path ) {
+			let terms = index.terms;
+			let term  = terms.filter( term => term.path == path );
+			if ( 1 === term.length ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Get posts for a term archive.
+		 *
+		 * @param string path.
+		 * @return object The posts.
+		 */
 		function get_term_archive( path ) {
 			let terms = index.terms;
 			let term  = terms.filter( term => term.path == path );
@@ -278,10 +334,10 @@ window.addEventListener(
 		 * Display an archive.
 		 *
 		 * @param string The post title.
-		 * @param string The paths in the archive.
 		 * @param int The page of pagination.
 		 */
-		function display_archive( title, paths, page = 1 ) {
+		function display_archive( path, page = 1 ) {
+
 			let data = get_archive( path );
 
 			let template = index.templates.archive;
