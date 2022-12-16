@@ -3,7 +3,8 @@ window.addEventListener(
 	function( event ) {
 		let index;
 
-		let content = document.getElementById( 'site-content' );
+		let content           = document.getElementById( 'site-content' );
+		let scroll_to_element = document.getElementById( 'main' );
 
 		get_index();
 
@@ -15,6 +16,7 @@ window.addEventListener(
 
 		/**
 		 * Handle click events.
+		 * Also handles ENTER clicks during keyboard navigation.
 		 */
 		window.addEventListener(
 			'click',
@@ -58,6 +60,8 @@ window.addEventListener(
 
 				// If a page was found, then stop the page refreshing.
 				if ( true === found ) {
+					scroll_to_element.scrollIntoView();
+
 					e.preventDefault();
 					return;
 				}
@@ -166,6 +170,21 @@ window.addEventListener(
 		 * @return object The archive data.
 		 */
 		function get_archive( path ) {
+
+			if ( is_term_archive( path ) ) {
+				return get_term_archive( path );
+			}
+
+			// Check if it's a date archive.
+
+			return null;
+		}
+
+		function is_term_archive( path ) {
+			return true;
+		}
+
+		function get_term_archive( path ) {
 			let terms = index.terms;
 			let term  = terms.filter( term => term.path == path );
 			if ( 1 === term.length ) {
@@ -173,8 +192,6 @@ window.addEventListener(
 
 				let posts;
 				posts = get_posts_with_term( term.id, index.posts );
-console.log( term.id );
-console.log( posts );
 				posts = get_posts_of_post_type( 'post', posts );
 
 				let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
@@ -183,9 +200,7 @@ console.log( posts );
 				return term;
 			}
 
-			// Check if it's a date archive.
-
-			return null;
+			return false;
 		}
 
 		/**
@@ -267,7 +282,6 @@ console.log( posts );
 		 * @param int The page of pagination.
 		 */
 		function display_archive( title, paths, page = 1 ) {
-
 			let data = get_archive( path );
 
 			let template = index.templates.archive;
