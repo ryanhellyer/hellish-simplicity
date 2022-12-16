@@ -112,12 +112,31 @@ window.addEventListener(
 		 */
 		function get_post( path ) {
 			let result;
-			let posts   = index.posts;
-			let results = posts.filter( post => post.path == path );
-			if ( 1 === results.length ) {
-				result = results[0];
+			let posts = index.posts;
+			let post  = posts.filter( post => post.path == path );
+			if ( 1 === post.length ) {
+				post = post[0];
 
-				return result;
+				return post;
+			}
+
+			return null;
+		}
+
+		/**
+		 * Get post data from ID.
+		 *
+		 * @param string post_id.
+		 * @return object The post data.
+		 */
+		function get_post_from_id( post_id ) {
+			let result;
+			let posts = index.posts;
+			let post  = posts.filter( post => post.id == post_id );
+			if ( 1 === post.length ) {
+				post = post[0];
+
+				return post;
 			}
 
 			return null;
@@ -155,8 +174,9 @@ window.addEventListener(
 				let posts;
 				posts = get_posts_with_term( term.id, index.posts );
 				posts = get_posts_of_post_type( 'post', posts );
-				console.log( posts );
 
+				let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
+				term.post_ids = post_ids;
 
 				return term;
 			}
@@ -203,13 +223,28 @@ window.addEventListener(
 
 				// If not on the correct post-type, then ignore it.
 				if ( post_type === posts[ i ].post_type ) {
-console.log( posts[ i ].post_type );
 					posts_of_post_type[ x ] = posts[ i ];
 					x++;
 				}
 			}
 
 			return posts_of_post_type;
+		}
+
+		/**
+		 * Get post_ids from post data.
+		 *
+		 * @param object posts The posts.
+		 * @return object The post IDs.
+		 */
+		function get_post_ids_from_posts( posts ) {
+			let post_ids = [];
+
+			for ( let i = 0; i < posts.length; i++ ) {
+				post_ids[ i ] = posts[ i ].id;
+			}
+
+			return post_ids;
 		}
 
 		/**
@@ -232,11 +267,24 @@ console.log( posts[ i ].post_type );
 		function display_archive( title, paths, page = 1 ) {
 
 			let data = get_archive( path );
-			console.log( data );
-//loop through each post
 
-//			let page_content = Mustache.render( index.templates.archive, get_post( path ) );
-//			content.innerHTML    = page_content;
+			let template = index.templates.archive;
+			template = template.replace( '{{title}}', data.name );
+
+			// Get the HTML for all of the excerpts.
+			let archive = '';
+			for ( let i = 0; i < data.post_ids.length; i++ ) {
+
+				let post_id = data.post_ids[ i ];
+				let post = get_post_from_id( post_id );
+
+				let post_html = Mustache.render( index.templates.excerpt, post );
+
+				archive = archive + post_html;
+			}
+			template = template.replace( '{{archive}}', archive );
+
+			content.innerHTML = template;
 		}
 
 		/**
