@@ -173,6 +173,8 @@ window.addEventListener(
 
 				let posts;
 				posts = get_posts_with_term( term.id, index.posts );
+console.log( term.id );
+console.log( posts );
 				posts = get_posts_of_post_type( 'post', posts );
 
 				let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.

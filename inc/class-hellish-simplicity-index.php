@@ -141,8 +141,13 @@ class Hellish_Simplicity_Index {
 
 			// Collect the term IDs.
 			$term_ids = array();
-			foreach ( (array) $post->term_ids as $key => $term_id ) {
-				$term_ids[] = absint( $term_id );
+			if ( is_string( $post->term_ids ) ) {
+				$term_ids = explode( ',', $post->term_ids );
+
+				// Sanitize the term IDs.
+				foreach ( $term_ids as $key => $term_id ) {
+					$term_ids[ $key ] = absint( $term_id );
+				}
 			}
 
 			/*
