@@ -190,18 +190,55 @@ console.log('add date archive here' );
 		 * @return object The posts.
 		 */
 		function get_home_archive( path ) {
-			let home = [];
-			home.title = 'home page yo';
-			home.name = 'home name yo';
+			let archive = [];
+			archive.title = 'home page yo';
+			archive.name = 'home name yo';
 
 			let posts     = get_posts_of_post_type( 'post', index.posts );
 			let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
 
 			post_ids = strip_post_ids_for_pagination( path, post_ids );
 
-			home.post_ids = post_ids;
+			archive.post_ids = post_ids;
 
-			return home;
+			return archive;
+		}
+
+		/**
+		 * Get posts for a term archive.
+		 *
+		 * @param string path.
+		 * @return object The posts.
+		 */
+		function get_term_archive( path ) {
+			let archive = [];
+
+			path = strip_anchor_and_query_vars( path );
+
+			let base_path = strip_pagination( path );
+			let terms = index.terms;
+			let term  = terms.filter( term => term.path == base_path );
+
+			if ( 1 === term.length ) {
+				term = term[0];
+
+				archive.title = term.name + ' term archive page yo';
+				archive.name = term.name + 'term archive name yo';
+
+				let posts;
+				posts = get_posts_with_term( term.id, index.posts );
+				posts = get_posts_of_post_type( 'post', posts );
+
+				let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
+
+				post_ids = strip_post_ids_for_pagination( path, post_ids );
+
+				archive.post_ids = post_ids;
+
+				return archive;
+			}
+
+			return false;
 		}
 
 		/**
@@ -249,6 +286,25 @@ console.log('add date archive here' );
 		}
 
 		/**
+		 * Is this a path for a term archive?
+		 *
+		 * @param string path.
+		 * @return bool true if is a term archive.
+		 */
+		function is_term_archive( path ) {
+			path = strip_anchor_and_query_vars( path );
+			path = strip_pagination( path );
+
+			let terms = index.terms;
+			let term  = terms.filter( term => term.path == path );
+			if ( 1 === term.length ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
 		 * Strip pagination string from end of path.
 		 * 
 		 * @param string path The path.
@@ -285,19 +341,15 @@ console.log('add date archive here' );
 			path = strip_anchor_and_query_vars( path );
 
 			let split = path.split( '/' );
-
-			if ( '/' === path ) {
-				return 1;
-			} else if (
+			if (
 				is_a_number( split[ split.length - 2 ] )
 				&&
 				index.pagination_page_text === split[ split.length - 3 ]
 			) {
-
 				return split[ split.length - 2 ];
 			}
 
-			return false;
+			return 1;
 		}
 
 		/**
@@ -322,47 +374,6 @@ console.log('add date archive here' );
 		 */
 		function is_a_number( value ){
 			return !isNaN( value )
-		}
-
-		/**
-		 * Is this a path for a term archive?
-		 *
-		 * @param string path.
-		 * @return bool true if is a term archive.
-		 */
-		function is_term_archive( path ) {
-			let terms = index.terms;
-			let term  = terms.filter( term => term.path == path );
-			if ( 1 === term.length ) {
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * Get posts for a term archive.
-		 *
-		 * @param string path.
-		 * @return object The posts.
-		 */
-		function get_term_archive( path ) {
-			let terms = index.terms;
-			let term  = terms.filter( term => term.path == path );
-			if ( 1 === term.length ) {
-				term = term[0];
-
-				let posts;
-				posts = get_posts_with_term( term.id, index.posts );
-				posts = get_posts_of_post_type( 'post', posts );
-
-				let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
-				term.post_ids = post_ids;
-
-				return term;
-			}
-
-			return false;
 		}
 
 		/**
