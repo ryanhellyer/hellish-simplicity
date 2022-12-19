@@ -10,6 +10,8 @@ A clean simple design. Responsive design makes the theme look good on all device
 
 == IDEAS FOR GOING FORWARD ==
 
+https://github.com/spatie/crawler
+
 PERHAPS NEED TO DO THIS WITH JUST THE BARE MINIMUM REQUIRED FOR RYAN.HELLYER.KIWI?
 /2022/
 /tag/bla/

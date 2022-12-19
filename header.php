@@ -35,6 +35,7 @@
 		}
 
 		echo '<a href="' . esc_url( home_url( '/page/2/' ) ) . '">/page/2/</a>';
+		echo '<a href="' . esc_url( home_url( '/some/bla/page/2/' ) ) . '">/some/bla/page/2/</a>';
 
 		echo '<a id="page-title" href="' . esc_url( home_url( '/' ) ) . '" title="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '" rel="home">';
 		// Output header text (need fallback to keep WordPress.org them demo happy)

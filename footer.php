@@ -24,11 +24,11 @@
 define( 'FINAL_TIME', microtime() );
 
 echo "\n";
-echo 'cache_time: ' . ( CACHE_TIME - START_TIME );
+echo 'cache_time: ' . ( absint( CACHE_TIME ) - absint( START_TIME ) );
 echo "\n";
-echo 'theme_time: ' . ( THEME_TIME - START_TIME );
+echo 'theme_time: ' . ( absint( THEME_TIME ) - absint( START_TIME ) );
 echo "\n";
-echo 'final_time: ' . ( FINAL_TIME - START_TIME );
+echo 'final_time: ' . ( absint( FINAL_TIME ) - absint( START_TIME ) );
 echo "\n";
 
 ?>

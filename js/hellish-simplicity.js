@@ -43,9 +43,10 @@ window.addEventListener(
 					return;
 				}
 
-				// Get the rath path.
+				// Get the raw path.
 				let raw_path = href.replace( index.home_url, '' );
-				path         = raw_path.split( '#' )[0]; // Strip anchor links.
+
+				path = strip_anchor_and_query_vars( raw_path );
 
 				// Handle paths
 				if ( is_post( path ) ) {
@@ -196,9 +197,38 @@ console.log('add date archive here' );
 			let posts     = get_posts_of_post_type( 'post', index.posts );
 			let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
 
+			post_ids = strip_post_ids_for_pagination( path, post_ids );
+
 			home.post_ids = post_ids;
 
 			return home;
+		}
+
+		/**
+		 * Strip post IDs for pagination.
+		 * 
+		 * @param string path The path.
+		 * @param array post_ids The post IDs.
+		 * @return array Only post IDs for the desired pagination.
+		 */
+		function strip_post_ids_for_pagination( path, post_ids ) {
+			let page  = get_pagination( path );
+			let limit = index.posts_per_page * page;
+			if ( limit > post_ids.length ) {
+				limit = post_ids.length;
+			}
+
+			let start = ( page - 1 ) * index.posts_per_page;
+
+			let new_post_ids = [];
+			let x = 0;
+			for ( let i = start; i < limit; i++ ) {
+
+				new_post_ids[ x ] = post_ids[ i ];
+				x++;
+			}
+
+			return new_post_ids;
 		}
 
 		/**
@@ -208,14 +238,90 @@ console.log('add date archive here' );
 		 * @return bool true if this is the home archive.
 		 */
 		function is_home_archive( path ) {
-			path = path.split( '?' )[0];
-			path = path.split( '#' )[0];
+			path = strip_anchor_and_query_vars( path );
+			path = strip_pagination( path );
 
 			if ( '/' === path ) {
 				return true;
 			}
 
 			return false;
+		}
+
+		/**
+		 * Strip pagination string from end of path.
+		 * 
+		 * @param string path The path.
+		 * @return string The path without pagination string.
+		 */
+		function strip_pagination( path ) {
+			let split = path.split( '/' );
+
+			if (
+				is_a_number( split[ split.length - 2 ] )
+				&&
+				index.pagination_page_text === split[ split.length - 3 ]
+			) {
+
+				split.pop().pop;
+				split.pop().pop;
+				split.pop().pop;
+
+				path = split.join( '/' ) + '/';
+
+				return path;
+			}
+
+			return path;
+		}
+
+		/**
+		 * Get the pagination number.
+		 * 
+		 * @param string path The path.
+		 * @return int The pagination number.
+		 */
+		function get_pagination( path ) {
+			path = strip_anchor_and_query_vars( path );
+
+			let split = path.split( '/' );
+
+			if ( '/' === path ) {
+				return 1;
+			} else if (
+				is_a_number( split[ split.length - 2 ] )
+				&&
+				index.pagination_page_text === split[ split.length - 3 ]
+			) {
+
+				return split[ split.length - 2 ];
+			}
+
+			return false;
+		}
+
+		/**
+		 * Strip anchors and query variables from the path.
+		 *
+		 * @param string The path.
+		 * @return string The modified path.
+		 */
+		function strip_anchor_and_query_vars( path ) {
+			path = path.split( '?' )[0];
+			path = path.split( '#' )[0];
+
+			return path;
+		}
+
+		/**
+		 * Is this a number?
+		 * Works with strings too.
+		 * 
+		 * @param string|int|number value The input number.
+		 * @return bool true if it is a number.
+		 */
+		function is_a_number( value ){
+			return !isNaN( value )
 		}
 
 		/**
@@ -326,33 +432,32 @@ console.log('add date archive here' );
 		 * @param string path.
 		 */
 		function display_post( path ) {
-			let page_content = Mustache.render( index.templates.single_post, get_post( path ) );
-			content.innerHTML    = page_content;
+			let page_content  = Mustache.render( index.templates.single_post, get_post( path ) );
+			content.innerHTML = page_content;
 		}
 
 		/**
 		 * Display an archive.
 		 *
-		 * @param string The post title.
-		 * @param int The page of pagination.
+		 * @param string path The archives path.
 		 */
-		function display_archive( path, page = 1 ) {
-
-			let data = get_archive( path );
-
+		function display_archive( path ) {
+			let data     = get_archive( path );
 			let template = index.templates.archive;
-			template = template.replace( '{{title}}', data.name );
+			template     = template.replace( '{{title}}', data.name );
 
-			// Get the HTML for all of the excerpts.
+ 			// Get the HTML for all of the excerpts.
 			let archive = '';
-			for ( let i = 0; i < data.post_ids.length; i++ ) {
+			let i = 0;
+			while( i < data.post_ids.length ) {
 
-				let post_id = data.post_ids[ i ];
-				let post = get_post_from_id( post_id );
-
+				let post_id   = data.post_ids[ i ];
+				let post      = get_post_from_id( post_id );
 				let post_html = Mustache.render( index.templates.excerpt, post );
 
 				archive = archive + post_html;
+
+				i++
 			}
 			template = template.replace( '{{archive}}', archive );
 
