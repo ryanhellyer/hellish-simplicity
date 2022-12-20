@@ -55,13 +55,18 @@ window.addEventListener(
 					found = true;
 				} else if ( is_archive( path ) ) {
 					display_archive( path );
-// MAYBE SHOULD ADD EACH ARCHIVE TYPE HERE INDIVIDUALLY INSTEAD OF COMBINED.
+						// MAYBE SHOULD ADD EACH ARCHIVE TYPE HERE INDIVIDUALLY INSTEAD OF COMBINED.
 					found = true;
 				}
 
 				// If a page was found, then stop the page refreshing.
 				if ( true === found ) {
 					scroll_to_element.scrollIntoView();
+
+const title = 'something';
+
+					window.history.pushState( 'object or string', title, raw_path );
+					document.title  = title; // Required due to pushstate not supporting title tag changes ... https://github.com/whatwg/html/issues/2174*/
 
 					e.preventDefault();
 					return;
@@ -282,9 +287,7 @@ window.addEventListener(
 		 * @return array Only post IDs for the desired pagination.
 		 */
 		function strip_post_ids_for_pagination( path, post_ids ) {
-//console.log( split );
 			let page  = get_pagination( path );
-console.log( 'page: ' + page );
 			let limit = index.posts_per_page * page;
 			if ( limit > post_ids.length ) {
 				limit = post_ids.length;
