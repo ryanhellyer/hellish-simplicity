@@ -38,7 +38,15 @@
 		echo ' | ';
 		echo '<a href="' . esc_url( home_url( '/some/bla/page/2/' ) ) . '">/some/bla/page/2/</a>';
 		echo ' | ';
+		echo '<a href="' . esc_url( home_url( '/2018/' ) ) . '">/2018/</a>';
+		echo ' | ';
 		echo '<a href="' . esc_url( home_url( '/2022/' ) ) . '">/2022/</a>';
+		echo ' | ';
+		echo '<a href="' . esc_url( home_url( '/2018/page/2/' ) ) . '">/2018/page/2/</a>';
+		echo ' | ';
+		echo '<a href="' . esc_url( home_url( '/2022/page/2/' ) ) . '">/2022/page/2/</a>';
+		echo ' | ';
+		echo '<a href="' . esc_url( home_url( '/2022a/' ) ) . '">/2022a/</a>';
 		echo ' | ';
 		echo '<a href="' . esc_url( home_url( '/tag/australia/' ) ) . '">/tag/australia/</a>';
 		echo '<a href="' . esc_url( home_url( '/tag/australia/page/2/' ) ) . '">/tag/australia/page/2/</a>';

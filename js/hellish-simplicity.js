@@ -55,7 +55,7 @@ window.addEventListener(
 					found = true;
 				} else if ( is_archive( path ) ) {
 					display_archive( path );
-
+// MAYBE SHOULD ADD EACH ARCHIVE TYPE HERE INDIVIDUALLY INSTEAD OF COMBINED.
 					found = true;
 				}
 
@@ -154,12 +154,14 @@ window.addEventListener(
 		 * @return bool true if is an archive.
 		 */
 		function is_archive( path ) {
-			if ( true === is_home_archive( path ) ) {
+
+			if ( is_home_archive( path ) ) {
 				return true
 			} else if ( is_term_archive( path ) ) {
 				return true;
+			} else if ( is_date_archive( path ) ) {
+				return true;
 			}
-console.log('add date archive here' );
 
 			return false;
 		}
@@ -176,6 +178,8 @@ console.log('add date archive here' );
 				return get_home_archive( path );
 			} else if ( is_term_archive( path ) ) {
 				return get_term_archive( path );
+			} else if ( is_date_archive( path ) ) {
+				return get_date_archive( path );
 			}
 
 			// Check if it's a date archive.
@@ -213,7 +217,7 @@ console.log('add date archive here' );
 		function get_term_archive( path ) {
 			let archive = [];
 
-			path = strip_anchor_and_query_vars( path );
+//			path = strip_anchor_and_query_vars( path );
 
 			let base_path = strip_pagination( path );
 			let terms = index.terms;
@@ -242,6 +246,35 @@ console.log('add date archive here' );
 		}
 
 		/**
+		 * Get posts for a date archive.
+		 *
+		 * @param string path.
+		 * @return object The posts.
+		 */
+		function get_date_archive( path ) {
+			let archive = [];
+
+			let base_path = strip_pagination( path );
+			const split   = base_path.split( '/' );
+			const year    = split[1];
+
+			archive.title = year + ' date archive page yo';
+			archive.name  = year + ' date archive name yo';
+
+			let posts;
+			posts = get_posts_from_year( year, index.posts );
+			posts = get_posts_of_post_type( 'post', posts );
+
+			let post_ids  = get_post_ids_from_posts( posts ); // Avoids storing the post data separately.
+
+			post_ids = strip_post_ids_for_pagination( path, post_ids );
+
+			archive.post_ids = post_ids;
+
+			return archive;
+		}
+
+		/**
 		 * Strip post IDs for pagination.
 		 * 
 		 * @param string path The path.
@@ -249,7 +282,9 @@ console.log('add date archive here' );
 		 * @return array Only post IDs for the desired pagination.
 		 */
 		function strip_post_ids_for_pagination( path, post_ids ) {
+//console.log( split );
 			let page  = get_pagination( path );
+console.log( 'page: ' + page );
 			let limit = index.posts_per_page * page;
 			if ( limit > post_ids.length ) {
 				limit = post_ids.length;
@@ -275,7 +310,6 @@ console.log('add date archive here' );
 		 * @return bool true if this is the home archive.
 		 */
 		function is_home_archive( path ) {
-			path = strip_anchor_and_query_vars( path );
 			path = strip_pagination( path );
 
 			if ( '/' === path ) {
@@ -292,12 +326,29 @@ console.log('add date archive here' );
 		 * @return bool true if is a term archive.
 		 */
 		function is_term_archive( path ) {
-			path = strip_anchor_and_query_vars( path );
 			path = strip_pagination( path );
 
 			let terms = index.terms;
 			let term  = terms.filter( term => term.path == path );
 			if ( 1 === term.length ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Is this a path for a date archive?
+		 *
+		 * @param string path.
+		 * @return bool true if is a date archive.
+		 */
+		function is_date_archive( path ) {
+			path = strip_pagination( path );
+
+			let dates = index.date_archives;
+
+			if ( dates.indexOf( path ) !== -1 ) {
 				return true;
 			}
 
@@ -338,7 +389,7 @@ console.log('add date archive here' );
 		 * @return int The pagination number.
 		 */
 		function get_pagination( path ) {
-			path = strip_anchor_and_query_vars( path );
+//			path = strip_anchor_and_query_vars( path );
 
 			let split = path.split( '/' );
 			if (
@@ -396,6 +447,31 @@ console.log('add date archive here' );
 			}
 
 			return posts_with_term;
+		}
+
+		/**
+		 * Get posts with a specific term.
+		 *
+		 * @param string year The year.
+		 * @param object posts The posts.
+		 * @return object The filtered posts.
+		 */
+		function get_posts_from_year( year, posts ) {
+			let posts_from_year = [];
+
+			let x = 0;
+			for ( let i = 0; i < posts.length; i++ ) {
+				const post = posts[ i ];
+
+				const posts_year = date( 'Y', post.timestamp );
+				if ( posts_year === year ) {
+					posts_from_year[ x ] = posts[ i ];
+					x++;
+				}
+
+			}
+
+			return posts_from_year;
 		}
 
 		/**
